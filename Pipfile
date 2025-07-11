@@ -17,6 +17,7 @@ typer = {extras = ["all"], version = "*"}
 [dev-packages]
 black = "*"
 pre-commit = "*"
+isort = "*"
 
 [requires]
 python_version = "3.12"

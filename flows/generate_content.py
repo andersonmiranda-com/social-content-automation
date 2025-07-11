@@ -1,6 +1,11 @@
-from langchain.prompts import PromptTemplate
-from modules.llm.utils import prompt_llm
 import json
+
+from langchain.prompts import PromptTemplate
+
+from modules.llm.utils import prompt_llm
+from utils.logger import setup_logger
+
+logger = setup_logger(__name__)
 
 # Prompt template for reels in JSON format
 json_template = """
@@ -31,20 +36,32 @@ prompt = PromptTemplate.from_template(json_template)
 
 def run(topic: str, output_file: str = "output.json") -> str:
     """
-    Generate a reel script for a given topic. If output_file is provided, save the result to a JSON file; otherwise, return the result as a string.
+    Generate a reel script for a given topic.
 
     Args:
         topic (str): The topic for the reel.
         output_file (str, optional): Path to the output JSON file. Defaults to 'output.json'.
 
     Returns:
-        str: The generated JSON string with the script, title, subtitle, caption, and hashtags (if not saving to file).
+        str: The generated JSON string with the script, title, subtitle, caption, and hashtags.
     """
     formatted_prompt = prompt.format(topic=topic)
     result = prompt_llm(formatted_prompt)
+
     if output_file and result:
-        data = json.loads(result)
-        with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        return f"Result saved to {output_file}"
+        try:
+            data = json.loads(result)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse JSON: {e}")
+            return f"Error: Failed to parse JSON response"
+
+        try:
+            with open(output_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            logger.info(f"Content successfully saved to {output_file}")
+            return f"Result saved to {output_file}"
+        except IOError as e:
+            logger.error(f"Failed to write file {output_file}: {e}")
+            return f"Error: Failed to write file {output_file}"
+
     return result
