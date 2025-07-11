@@ -33,7 +33,6 @@ htmlcov/
 
 # Configuración de IDEs
 .idea/
-.vscode/
 .spyderproject
 .spyproject
 .ropeproject
