@@ -1,4 +1,4 @@
-from modules.llm_factory import get_llm_client
+from modules.llm.factory import get_llm_client
 
 
 def prompt_llm(prompt: str, model: str = None, **kwargs) -> str:

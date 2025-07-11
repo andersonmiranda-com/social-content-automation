@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI
-from .llm_base import LLMClient
+from .base import LLMClient
 
 
 class OpenAIClient(LLMClient):

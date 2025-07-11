@@ -1,5 +1,5 @@
 from langchain.prompts import PromptTemplate
-from modules.llm_utils import prompt_llm
+from modules.llm.utils import prompt_llm
 import json
 
 # Prompt template for reels in JSON format

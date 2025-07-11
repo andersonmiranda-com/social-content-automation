@@ -5,10 +5,10 @@ repos:
       - id: black
         language_version: python3.9
 
-  - repo: local
-    hooks:
-      - id: update-requirements
-        name: Update requirements.txt
-        entry: ./update_requirements.sh
-        language: script
-        always_run: true
+  # - repo: local
+  #   hooks:
+  #     - id: update-requirements
+  #       name: Update requirements.txt
+  #       entry: ./update_requirements.sh
+  #       language: script
+  #       always_run: true

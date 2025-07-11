@@ -1,6 +1,6 @@
 import os
-from .llm_openai import OpenAIClient
-from .llm_claude import ClaudeClient
+from .openai import OpenAIClient
+from .anthropic import ClaudeClient
 
 
 def get_llm_client(model: str = None):

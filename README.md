@@ -1,6 +1,16 @@
 # Social Media Content Automation
 
-This project automates the process of generating and publishing content to social media platforms like Instagram and LinkedIn. It uses various APIs to fetch data, generate content, and post it.
+## 🧩 Philosophy & Modular Architecture
+
+This project is inspired by visual automation platforms like n8n, but here workflows are built with code. The key is modularity and reusability: each feature or integration is implemented as an independent module, designed to be reused and combined in different flows, just like Lego bricks.
+
+- **Workflows**: Defined in the `flows/` folder, orchestrating automation logic by combining modules.
+- **Modules**: Each integration or feature lives in `modules/` and must be decoupled and reusable.
+- **Utilities**: Helper code in `utils/` for cross-cutting concerns.
+
+### For Developers
+
+When contributing, design every new feature as a modular and reusable block. Always think about how your code can be combined in different flows and avoid unnecessary dependencies between modules.
 
 ---
 

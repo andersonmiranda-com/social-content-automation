@@ -1,5 +1,5 @@
 from langchain_anthropic import ChatAnthropic
-from .llm_base import LLMClient
+from .base import LLMClient
 
 
 class ClaudeClient(LLMClient):
