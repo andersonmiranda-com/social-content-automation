@@ -1,0 +1,55 @@
+# Archivos de bytecode y caché
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribución y empaquetado
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+wheels/
+*.whl
+
+# Archivos de pruebas y cobertura
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.hypothesis/
+htmlcov/
+
+# Configuración de IDEs
+.idea/
+.vscode/
+.spyderproject
+.spyproject
+.ropeproject
+
+# Otros archivos y carpetas comunes
+*.log
+*.pot
+*.mo
+pip-log.txt
+pip-delete-this-directory.txt
+db.sqlite3
+instance/
+.webassets-cache
+.scrapy
+docs/_build/
+.ipynb_checkpoints
+.mypy_cache/
+.pytype/
+.pyre/
