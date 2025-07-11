@@ -9,6 +9,10 @@ openai = "*"
 tiktoken = "*"
 chromadb = "*"
 faiss-cpu = "*"
+langchain-community = "*"
+langchain-openai = "*"
+langchain-anthropic = "*"
+typer = {extras = ["all"], version = "*"}
 
 [dev-packages]
 black = "*"
