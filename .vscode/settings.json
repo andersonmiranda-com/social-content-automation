@@ -1,14 +1,11 @@
 {
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
-  },
   "[python]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
   },
+
   "python.sortImports.args": ["--profile", "black"],
   "isort.args": ["--profile", "black"],
   "python.defaultInterpreterPath": "./.venv/bin/python"

@@ -1,7 +1,9 @@
-from modules.llm.factory import get_llm_client
+from typing import Optional
+
+from services.llm_factory import get_llm_client
 
 
-def prompt_llm(prompt: str, model: str = None, **kwargs) -> str:
+def prompt_llm(prompt: str, model: Optional[str] = None, **kwargs) -> str:
     """
     Send a prompt to the selected LLM and return the response as a string.
 
@@ -15,4 +17,4 @@ def prompt_llm(prompt: str, model: str = None, **kwargs) -> str:
     """
     llm_client = get_llm_client(model=model)
     response = llm_client.invoke(prompt)
-    return response.content
+    return response

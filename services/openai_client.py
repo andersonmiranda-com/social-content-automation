@@ -1,5 +1,6 @@
 from langchain_openai import ChatOpenAI
-from .base import LLMClient
+
+from .base_client import LLMClient
 
 
 class OpenAIClient(LLMClient):
@@ -14,4 +15,5 @@ class OpenAIClient(LLMClient):
         self.llm = ChatOpenAI(temperature=temperature, model=model)
 
     def invoke(self, prompt: str) -> str:
-        return self.llm.invoke(prompt)
+        response = self.llm.invoke(prompt)
+        return str(response.content)

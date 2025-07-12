@@ -1,0 +1,3 @@
+# Cloudinary configuration
+# Credentials should be loaded from .env
+upload_folder: "social-content-automation/" 

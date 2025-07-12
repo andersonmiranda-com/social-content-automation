@@ -1,9 +1,11 @@
 import os
-from .openai import OpenAIClient
-from .anthropic import ClaudeClient
+from typing import Optional
+
+from .anthropic_client import AnthropicClient
+from .openai_client import OpenAIClient
 
 
-def get_llm_client(model: str = None):
+def get_llm_client(model: Optional[str] = None):
     """
     Return an LLM client instance for the selected provider, optionally using a specific model.
 
@@ -16,7 +18,7 @@ def get_llm_client(model: str = None):
     provider = os.getenv("LLM_PROVIDER", "openai").lower()
     if provider == "openai":
         return OpenAIClient(model=model) if model else OpenAIClient()
-    elif provider == "claude":
-        return ClaudeClient(model=model) if model else ClaudeClient()
+    elif provider == "anthropic":
+        return AnthropicClient(model=model) if model else AnthropicClient()
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")

@@ -1,17 +1,21 @@
 from langchain_anthropic import ChatAnthropic
-from .base import LLMClient
+
+from .base_client import LLMClient
 
 
-class ClaudeClient(LLMClient):
+class AnthropicClient(LLMClient):
     def __init__(self, temperature=0.7, model="claude-3-opus-20240229"):
         """
-        Initialize the ClaudeClient.
+        Initialize the AnthropicClient.
 
         Args:
             temperature (float, optional): The temperature for the model. Defaults to 0.7.
             model (str, optional): The model to use. Defaults to 'claude-3-opus-20240229'.
         """
-        self.llm = ChatAnthropic(temperature=temperature, model=model)
+        self.llm = ChatAnthropic(
+            temperature=temperature, model_name=model, timeout=None, stop=[]
+        )
 
     def invoke(self, prompt: str) -> str:
-        return self.llm.invoke(prompt)
+        response = self.llm.invoke(prompt)
+        return str(response.content)

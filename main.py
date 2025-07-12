@@ -1,8 +1,9 @@
 import typer
-from flows import generate_content
-from dotenv import load_dotenv
 
-load_dotenv()
+from chains import generate_post
+from utils.env_loader import load_environment
+
+load_environment()
 
 app = typer.Typer()
 
@@ -13,7 +14,7 @@ def generate_content_cmd(
     output: str = typer.Option("output.json", help="Output JSON file"),
 ):
     """Generate content for a reel given a topic and save to a JSON file."""
-    generate_content.run(topic, output)
+    generate_post.run(topic, output)
 
 
 # Example command to chain flows (placeholder)
@@ -23,7 +24,7 @@ def pipeline(
     output: str = typer.Option("output.json", help="Output JSON file"),
 ):
     """Run the complete pipeline: generate content and publish."""
-    generate_content.run(topic, output)
+    generate_post.run(topic, output)
     # Here you could call other flows, e.g.:
     # publish_instagram.run(generated_id)
 

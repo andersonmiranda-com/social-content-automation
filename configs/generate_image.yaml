@@ -1,0 +1,5 @@
+# Configuration for image generation
+# This can include details about the image model, style, etc.
+model: "dall-e-3"
+style: "vivid"
+quality: "hd" 

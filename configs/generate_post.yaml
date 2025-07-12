@@ -1,0 +1,3 @@
+model: "gpt-4o-mini"
+temperature: 0.7
+prompt_template: "prompts/post_prompt.txt" 
