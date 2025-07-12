@@ -1,0 +1,19 @@
+# -----------------------------------------------------------------
+# Social Content Automation - Crontab Schedule
+# -----------------------------------------------------------------
+#
+# To install this crontab, run the following command from the project root:
+#   (crontab -l ; cat crontab.txt) | crontab -
+#
+# To view the currently installed jobs, run:
+#   crontab -l
+#
+# To remove all jobs, run:
+#   crontab -r
+#
+# -----------------------------------------------------------------
+
+# Execute the social post pipeline every day at 9:00 AM local time.
+# Make sure to replace the paths with your actual project and pipenv paths.
+# You can find the pipenv path by running 'which pipenv' in your terminal.
+0 9 * * * cd /Users/andersonmiranda/Dev/python/automations/social-content-automation && /Users/andersonmiranda/.pyenv/shims/pipenv run python run_pipeline.py >> /tmp/social_content_automation.log 2>&1 

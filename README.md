@@ -60,6 +60,19 @@ cp langserve_app/.env.example langserve_app/.env
 uvicorn langserve_app.app:app --reload
 ```
 
+### 🕒 Scheduling with Cron (Optional)
+
+This project can be run on a schedule using a `cron` job. A template file `crontab.txt` is provided in the root of the project.
+
+1.  **Review the template**: Open `crontab.txt` and ensure the paths to the project directory and the `pipenv` executable are correct for your system.
+2.  **Install the cron job**: Run the following command from the project root to add the job to your system's crontab without deleting existing jobs:
+    ```bash
+    (crontab -l 2>/dev/null; cat crontab.txt) | crontab -
+    ```
+3.  **Verify**: You can check that the job was installed correctly by running `crontab -l`.
+
+Logs for the scheduled runs will be redirected to `/tmp/social_content_automation.log`.
+
 ---
 
 ## 🧪 How to Test Chains
