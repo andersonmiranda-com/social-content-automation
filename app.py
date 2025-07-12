@@ -18,7 +18,7 @@ load_dotenv()
 # Create a new, typed pipeline by attaching the Pydantic model.
 # This does NOT change the runtime behavior of the pipeline (it still gets a dict),
 # but it gives LangServe the necessary information to build the UI.
-typed_pipeline = social_post_pipeline.with_types(input_type=SocialPostInput)
+typed_pipeline = social_post_pipeline.with_types(input_type=SocialPostInput)  # type: ignore
 
 # Create the FastAPI app
 app = FastAPI(
