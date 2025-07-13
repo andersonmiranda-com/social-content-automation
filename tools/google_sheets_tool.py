@@ -4,6 +4,7 @@ Fake Google Sheets Tool
 """
 
 import csv
+from datetime import datetime
 from io import StringIO
 
 from langchain_core.runnables import RunnableLambda
@@ -72,6 +73,42 @@ def _read_from_sheet_logic(data: dict) -> dict:
         }
 
 
+def _upsert_sheet_logic(data: dict) -> dict:
+    """
+    Receives filter criteria and data to upsert into a Google Sheet.
+    Expected keys in data: 'filter_key', 'filter_value', 'row_data'.
+    """
+    print("--- ✍️ Upserting to Google Sheets ---")
+
+    filter_key = data.get("filter_key")
+    filter_value = data.get("filter_value")
+    row_data = data.get("row_data")
+
+    if not all([filter_key, filter_value, row_data]):
+        raise ValueError(
+            "Missing 'filter_key', 'filter_value', or 'row_data' in input."
+        )
+
+    # Assert to help the linter understand the types are now guaranteed
+    assert filter_key is not None
+    assert row_data is not None
+
+    client = GoogleSheetsClient()
+    result = client.upsert_row(filter_key, str(filter_value), row_data)
+
+    if result:
+        print(f"   ✅ Successfully upserted row for '{filter_key}={filter_value}'.")
+        data["upsert_status"] = "success"
+    else:
+        print(f"   ❌ Failed to upsert row for '{filter_key}={filter_value}'.")
+        data["upsert_status"] = "failed"
+
+    # Return the original data bag for subsequent steps
+    return data
+
+
 save_to_sheet_chain = RunnableLambda(_save_to_sheet_logic)
 
 read_from_sheet_chain = RunnableLambda(_read_from_sheet_logic)
+
+upsert_sheet_chain = RunnableLambda(_upsert_sheet_logic)
