@@ -52,3 +52,10 @@ docs/_build/
 .mypy_cache/
 .pytype/
 .pyre/
+
+# Local configuration files
+/configs/local.yaml
+
+# Credentials
+/configs/google_sheets_credentials.json
+/configs/google_sheets_token.json

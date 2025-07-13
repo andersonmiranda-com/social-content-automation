@@ -7,6 +7,12 @@ from pathlib import Path
 
 import yaml
 
+from utils.logger import setup_logger
+
+logger = setup_logger(__name__)
+
+CONFIG_CACHE = {}
+
 
 def load_config(config_name: str) -> dict:
     """

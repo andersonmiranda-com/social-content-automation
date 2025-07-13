@@ -1,0 +1,7 @@
+# Google Sheets API configuration
+spreadsheet_id: "1PZvkcw6NT-UY21g1bNr20iJHVoAPDLO6ZAA8upgD7_Y"
+range_name: "Topics"
+token_file: "configs/google_sheets_token.json"
+credentials_file: "configs/google_sheets_credentials.json"
+scopes:
+  - "https://www.googleapis.com/auth/spreadsheets.readonly" 

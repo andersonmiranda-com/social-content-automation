@@ -18,6 +18,9 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 langserve = {extras = ["server"], version = "*"}
 python-dotenv = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
 
 [dev-packages]
 black = "*"
