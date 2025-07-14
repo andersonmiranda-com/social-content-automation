@@ -1,10 +1,9 @@
 from langchain_openai import ChatOpenAI
 from openai import OpenAI
 from typing import Literal
-from .base_client import LLMClient
 
 
-class OpenAIClient(LLMClient):
+class OpenAIClient:
     def __init__(self, temperature=0.7, model="gpt-3.5-turbo"):
         """
         Initialize the OpenAIClient.
