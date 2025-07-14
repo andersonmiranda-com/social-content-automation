@@ -1,3 +1,6 @@
 # Cloudinary configuration
-# Credentials should be loaded from .env
-upload_folder: "social-content-automation/" 
+cloud_name: dlvxgjflw
+upload_preset: n8n_upload
+folder: social
+api_key: ${CLOUDINARY_API_KEY}
+api_secret: ${CLOUDINARY_API_SECRET}

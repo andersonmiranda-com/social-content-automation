@@ -1,18 +1,5 @@
-## 🧪 Chains and Pipelines
-
-- Each `Chain` must be a reusable, testable, and decoupled unit.
-- Each `Pipeline` must chain `Chains` using `RunnableSequence` or `RunnableMap`.
-- Use `RunnableLambda` to adapt pure functions.
-- You can have chains without AI (e.g., validators, formatters, adapters).
-
 ---
-
-## 🧾 Configuration Management
-
-- Each `Chain` or `Pipeline` can have a YAML file in `config/` with its parameters.
-- Use functions like `load_config("generate_text")` to access them.
-- Sensitive variables (keys, tokens, secrets) must go in `.env`, and `.env.example` must be kept up to date.
-
+alwaysApply: true
 ---
 
 ## 💾 Dependency and Environment
@@ -37,6 +24,7 @@
 - Import in the order: stdlib → third-party → local.
 - Use `type hints` and docstrings.
 - Every Python file must have a module docstring.
+- Use `logger` for all screen outputs instead of `print`.
 
 ---
 
@@ -52,3 +40,5 @@
 ## 🔥 Final Call
 
 Think of each block as a Lego piece: simple, reusable, and without unnecessary couplings.
+
+- **Docstrings:** All public functions and classes must have `docstrings` explaining their purpose, arguments, and what they return.
