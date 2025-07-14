@@ -47,7 +47,7 @@ class GoogleSheetsClient:
                 token.write(creds.to_json())
         return creds
 
-    def read_sheet(self):
+    def read_sheet(self, range_name: str | None = None):
         if not self.creds:
             logger.error("Authentication failed. Cannot read from sheet.")
             return None
@@ -55,11 +55,14 @@ class GoogleSheetsClient:
         try:
             service = build("sheets", "v4", credentials=self.creds)
             sheet = service.spreadsheets()
+
+            current_range = range_name if range_name else self.config["range_name"]
+
             result = (
                 sheet.values()
                 .get(
                     spreadsheetId=self.config["spreadsheet_id"],
-                    range=self.config["range_name"],
+                    range=current_range,
                 )
                 .execute()
             )
@@ -78,7 +81,13 @@ class GoogleSheetsClient:
             logger.error(f"An API error occurred: {err}")
             return None
 
-    def upsert_row(self, filter_key: str, filter_value: str, row_data: dict):
+    def upsert_row(
+        self,
+        filter_key: str,
+        filter_value: str,
+        row_data: dict,
+        range_name: str | None = None,
+    ):
         """
         Updates a row if a matching filter_value is found in the filter_key column.
         Otherwise, appends a new row with the provided data.
@@ -90,7 +99,9 @@ class GoogleSheetsClient:
         try:
             service = build("sheets", "v4", credentials=self.creds)
             sheet_values = service.spreadsheets().values()
-            sheet_name = self.config["range_name"].split("!")[0]
+
+            current_range = range_name if range_name else self.config["range_name"]
+            sheet_name = current_range.split("!")[0]
 
             # Read the sheet to find the row and get headers
             read_result = sheet_values.get(

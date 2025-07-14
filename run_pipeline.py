@@ -36,5 +36,5 @@ else:
 
     logger.info("-" * 20)
     logger.info("--- Pipeline Finished ---")
-    logger.info("Final Result:")
-    logger.info(final_result)
+    logger.debug("Final Result:")
+    logger.debug(final_result)

@@ -21,17 +21,8 @@ from chains.generate_post import (
 )
 from chains.select_topic import select_topic_chain
 from chains.upload_chain import upload_chain
-from tools.google_sheets_tool import read_from_sheet_chain, save_to_sheet_chain
-
-
-def _preprocess_input(data: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Extracts the 'topic' from the input dictionary.
-    Handles both direct calls and LangServe's wrapped input.
-    """
-    inner_input = data.get("input", data)
-    return {"topic": inner_input.get("topic", "No topic provided")}
-
+from chains.save_content_chain import save_content_chain
+from tools.google_sheets_tool import read_from_sheet_chain
 
 # The sequential pipeline definition
 social_post_pipeline = (
@@ -66,5 +57,5 @@ social_post_pipeline = (
         )
     )
     # Step 6: Pass the whole bag to the final saving step.
-    # | save_to_sheet_chain
+    | save_content_chain
 )
