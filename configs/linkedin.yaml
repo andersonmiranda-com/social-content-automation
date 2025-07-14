@@ -1,0 +1,18 @@
+# LinkedIn API Configuration
+# This file stores configuration settings for the LinkedIn API client.
+
+# The client ID for your LinkedIn API app.
+# It can also be set using the LINKEDIN_CLIENT_ID environment variable.
+client_id: ""
+
+# The client secret for your LinkedIn API app.
+# It can also be set using the LINKEDIN_CLIENT_SECRET environment variable.
+client_secret: ""
+
+# The access token for making authenticated API requests.
+# It can also be set using the LINKEDIN_ACCESS_TOKEN environment variable.
+access_token: ""
+
+# The ID of the person or organization to post as.
+# It can also be set using the LINKEDIN_AUTHOR_ID environment variable.
+author_id: ""
