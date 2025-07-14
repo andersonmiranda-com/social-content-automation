@@ -1,6 +1,6 @@
 """
-Fake Google Sheets Tool
-- Simulates saving post and image data to a Google Sheet.
+Google Sheets Tool
+- Allows saving post and image data to a Google Sheet.
 """
 
 import csv
