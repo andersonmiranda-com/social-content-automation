@@ -21,7 +21,7 @@ def _save_to_sheet_logic(data: dict) -> dict:
     and returns a success status.
     """
 
-    print(f"--- 📝 Saving to Google Sheets ---")
+    logger.info("--- 📝 Saving to Google Sheets ---")
 
     # Extract data to save
     post_title = data.get("post_data", {}).get("title", "N/A")
@@ -35,15 +35,17 @@ def _save_to_sheet_logic(data: dict) -> dict:
     writer.writerow(["Title", "Caption", "Image URL"])
     writer.writerow([post_title, post_caption, image_url])
 
-    print(
+    logger.info(
         f"   ✍️  Row to save: ['{post_title}', '{post_caption[:20]}...', '{image_url}']"
     )
 
     # Get the CSV string
     csv_string = output.getvalue()
-    print(f"   Binary data (first 50 chars): {csv_string[:50].encode('utf-8')}...")
+    logger.debug(
+        f"   Binary data (first 50 chars): {csv_string[:50].encode('utf-8')}..."
+    )
 
-    print("   ✅  Save to Google Sheet successful.")
+    logger.info("   ✅  Save to Google Sheet successful.")
 
     return {"sheet_status": "success", "saved_data": csv_string}
 
@@ -52,7 +54,7 @@ def _read_from_sheet_logic(data: dict) -> dict:
     """
     Simulates reading all rows from a Google Sheet.
     """
-    print("--- 📥 Reading from Google Sheets ---")
+    logger.info("--- 📥 Reading from Google Sheets ---")
 
     # In a real implementation, you would connect to the Google Sheets API here.
     # For this simulation, we'll read from a local CSV file.
@@ -61,11 +63,9 @@ def _read_from_sheet_logic(data: dict) -> dict:
 
     if sheet_data is not None:
         logger.info(f"Read {len(sheet_data)} rows from the sheet.")
-        print(f"   ✅ Read {len(sheet_data)} rows from the sheet.")
         return {"sheet_data": sheet_data, "read_status": "success"}
     else:
         logger.error("Failed to read data from Google Sheet.")
-        print("   ❌ Failed to read data from Google Sheet.")
         return {
             "sheet_data": [],
             "read_status": "error",
@@ -78,7 +78,7 @@ def _upsert_sheet_logic(data: dict) -> dict:
     Receives filter criteria and data to upsert into a Google Sheet.
     Expected keys in data: 'filter_key', 'filter_value', 'row_data'.
     """
-    print("--- ✍️ Upserting to Google Sheets ---")
+    logger.info("--- ✍️ Upserting to Google Sheets ---")
 
     filter_key = data.get("filter_key")
     filter_value = data.get("filter_value")
@@ -97,10 +97,12 @@ def _upsert_sheet_logic(data: dict) -> dict:
     result = client.upsert_row(filter_key, str(filter_value), row_data)
 
     if result:
-        print(f"   ✅ Successfully upserted row for '{filter_key}={filter_value}'.")
+        logger.info(
+            f"   ✅ Successfully upserted row for '{filter_key}={filter_value}'."
+        )
         data["upsert_status"] = "success"
     else:
-        print(f"   ❌ Failed to upsert row for '{filter_key}={filter_value}'.")
+        logger.error(f"   ❌ Failed to upsert row for '{filter_key}={filter_value}'.")
         data["upsert_status"] = "failed"
 
     # Return the original data bag for subsequent steps

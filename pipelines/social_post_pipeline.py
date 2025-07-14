@@ -51,21 +51,20 @@ social_post_pipeline = (
     # as they need to be adapted to handle the new `content_data` structure.
     # For example, you might want to generate one image based on the "post" content.
     #
-    # # Step 4: Generate image data from 'post' content, add it as 'image_data'
-    # | RunnablePassthrough.assign(
-    #     image_data=(
-    #         RunnableLambda(lambda x: x["content_data"]["post"])
-    #         | generate_image_chain
-    #     )
-    # )
-    # # Step 5: Upload image and assign just the final URL to a new key
-    # | RunnablePassthrough.assign(
-    #     image_url=(
-    #         RunnableLambda(lambda x: x["image_data"])
-    #         | upload_chain
-    #         | itemgetter("image_url")
-    #     )
-    # )
-    # # Step 6: Pass the whole bag to the final saving step.
+    # Step 4: Generate image data from 'post' content, add it as 'image_data'
+    | RunnablePassthrough.assign(
+        image_data_output=(
+            RunnableLambda(lambda x: x["content_data"]["post"]) | generate_image_chain
+        )
+    )
+    # Step 5: Upload image and assign just the final URL to a new key
+    | RunnablePassthrough.assign(
+        image_url=(
+            RunnableLambda(lambda x: x["image_data_output"])
+            | upload_chain
+            | itemgetter("image_url")
+        )
+    )
+    # Step 6: Pass the whole bag to the final saving step.
     # | save_to_sheet_chain
 )

@@ -1,28 +1,39 @@
 {
-    "id_topic": "46",
-    "category": "Liderazgo Personal",
-    "topic": "Si no lideras tu energía, otros decidirán en qué gastarla",
+    "id_topic": "48",
+    "category": "Liderazgo Sistémico",
+    "topic": "Un sistema mal configurado no se arregla con más esfuerzo",
     "level": "medio",
-    "objective": "desafiar",
-    "reel_data": {
-        "content": "A veces te esfuerzas tanto en cambiar algo, que te olvidas de mirar de dónde viene. ¿Te ha pasado? Te repites: “Tengo que hacerlo mejor”. Pero, ¿y si no se trata de hacerlo más fuerte, sino de mirar diferente? A veces el problema no está en lo que haces, sino en lo que no ves. Cuando te das permiso para parar y observar, encuentras respuestas donde antes solo había presión. No se trata de ir más rápido, sino de ir más profundo. El verdadero cambio empieza cuando te atreves a mirar lo que siempre has evitado. ¿Te atreves a mirar de otra forma hoy?",
-        "title": "¿Y si el cambio no es fuerza, sino mirada?",
-        "subtitle": "El primer paso no siempre es avanzar, a veces es parar.",
-        "caption": "Muchas veces intentamos cambiar a base de esfuerzo, sin darnos cuenta de que el verdadero bloqueo está en lo que no queremos mirar. Parar y observar puede darte respuestas que la prisa nunca te dará.\n\nEl cambio real empieza cuando te permites ver con otros ojos. ¿Listo para mirar diferente y encontrar nuevas posibilidades?",
-        "hashtags": "#coaching #equipos #cambiopersonal #liderazgo #autoconocimiento #desarrolloprofesional #motivacion #crecimientopersonal #trabajoenequipo #miradadiferente"
+    "objective": "reflexionar",
+    "content_data": {
+        "id_topic": "48",
+        "category": "Liderazgo Sistémico",
+        "topic": "Un sistema mal configurado no se arregla con más esfuerzo",
+        "level": "medio",
+        "objective": "reflexionar",
+        "reel": {
+            "content": "En el camino hacia el éxito, a veces olvidas que eres un ser completo, con luces y sombras. Reconocer tus partes te hace más fuerte. Hoy, date permiso para integrar todo lo que eres, sin juicios. Desde la aceptación, florece la autenticidad y el poder. Es momento de abrazar tu totalidad, brillar con luz propia y conquistar tus metas desde la plenitud. ¡Tú eres suficiente!",
+            "title": "Integra tu totalidad",
+            "subtitle": "Brilla desde la autenticidad",
+            "caption": "En el camino hacia el éxito, abrazar tu totalidad te hace más fuerte. Desde la aceptación, florece la autenticidad y el poder. ¡Tú eres suficiente! #Integración #Autenticidad #ÉxitoPersonal",
+            "hashtags": "#Integración #Autenticidad #ÉxitoPersonal #CrecimientoPersonal #DesarrolloPersonal #Suficiencia #Plenitud #Aceptación #Empoderamiento #Coaching"
+        },
+        "post": {
+            "content": "Imagina un equipo de trabajo donde la comunicación se siente como un laberinto sin salida, donde las tensiones y malentendidos parecen crecer sin control. En este ambiente, el nivel de estrés y desgaste emocional es palpable, afectando la productividad y el bienestar de todos. En situaciones como esta, es fundamental detenerse y observar desde una perspectiva sistémica. Mirar más allá de las palabras dichas y escuchar las necesidades no expresadas puede ser la clave para desbloquear la energía estancada y restaurar la armonía.",
+            "title": "Desbloqueando la Comunicación en Equipos",
+            "subtitle": "Una mirada sistémica para restaurar la armonía",
+            "caption": "En situaciones de tensión en equipos de trabajo, detenerse a observar desde una perspectiva sistémica puede ser la clave para desbloquear la energía estancada y restaurar la armonía. ¿Estás dispuesto a mirar más allá de las palabras para escuchar las necesidades no expresadas?",
+            "hashtags": "#EquiposDeTrabajo #ComunicaciónEfectiva #MiradaSistémica #BienestarLaboral #CrecimientoPersonal #PNL #BertHellinger"
+        },
+        "carousel": {
+            "content": "Slide 1: Encuentra tu brújula interna, esa que te guía hacia tu propósito. \nSlide 2: La vida fluye cuando te alineas con lo que realmente importa en tu corazón. \nSlide 3: No busques afuera, la respuesta está en tu interior. \nSlide 4: El propósito ilumina tu camino, dándote fuerza y dirección. \nSlide 5: Reconectar con tu esencia es el primer paso para vivir una vida plena. \nSlide 6: Cuando te conectas contigo mismo, el propósito se revela en toda su claridad. \nSlide final: Reflexiona en silencio, escucha tu voz interior y deja que te guíe hacia tu propósito más auténtico. #Propósito #Reconexión #VidaPlena #Autenticidad #CrecimientoPersonal #DesarrolloProfesional",
+            "title": "Encuentra tu brújula interna",
+            "subtitle": "Reconecta con tu propósito",
+            "caption": "Descubre la fuerza transformadora que reside en reconectar con tu propósito. Cuando te alineas con lo que realmente importa en tu corazón, la vida fluye con autenticidad y plenitud. ¡Déjate guiar por tu brújula interna hacia una vida con significado y realización!",
+            "hashtags": "#Propósito #Reconexión #VidaPlena #Autenticidad #CrecimientoPersonal #DesarrolloProfesional"
+        }
     },
-    "post_data": {
-        "content": "Hay días en los que parece que todo pesa el doble. Las reuniones se alargan, las tareas se acumulan y la cabeza no para. Nos decimos: “Ya pasará”. Pero, ¿y si no se trata solo de esperar?  \n\nA veces, lo que más nos bloquea no es el trabajo en sí, sino cómo lo miramos. Nos olvidamos de parar, respirar y preguntarnos: ¿para qué hago lo que hago? ¿Qué sentido tiene para mí?  \n\nCuando conectamos con el propósito, hasta lo más rutinario cambia de color. No se trata de grandes discursos ni de buscar la motivación en libros. Es algo sencillo: recordar lo que nos mueve.  \n\nHoy, te invito a hacer una pausa. A mirar tu día con otros ojos. ¿Qué pequeño gesto puedes cambiar para reconectar con lo que te importa?",
-        "title": "Redescubre el sentido de tu trabajo",
-        "subtitle": "Una pausa puede cambiarlo todo",
-        "caption": "Hay días en los que todo parece cuesta arriba. Pero a veces, lo que más nos pesa no es la carga, sino cómo la miramos.\n\nHacer una pausa para reconectar con el propósito puede transformar nuestra energía y nuestros resultados.",
-        "hashtags": "#propósito #motivación #bienestar #equipos #liderazgo #coaching #claridad #resultados #trabajo #desarrollo"
+    "image_data": {
+        "image_url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-zdmpFGUDKMIdH3YaJCPjC2O3/user-t9p7G2fbNDsc2mt2faI7033S/img-x03kksEAqeod6p3VVyrOLWQP.png?st=2025-07-14T11%3A38%3A50Z&se=2025-07-14T13%3A38%3A50Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-13T23%3A07%3A02Z&ske=2025-07-14T23%3A07%3A02Z&sks=b&skv=2024-08-04&sig=PLSXDvlipfPhgChqa4Qjknv9b7fkF1RoHNAFb194A8c%3D"
     },
-    "carousel_data": {
-        "content": "Slide 1: ¿Y si el mayor bloqueo está justo donde no miras?\n\nSlide 2: A veces, lo que más evitamos es lo que más nos enseña.\n\nSlide 3: Los patrones no son enemigos, solo mensajes que esperan ser escuchados.\n\nSlide 4: Cuando te atreves a mirar de frente, algo dentro cambia.\n\nSlide 5: El primer paso no es resolver. Es reconocer.",
-        "title": "Atrévete a mirar donde nunca miras",
-        "subtitle": "El cambio empieza con una mirada honesta",
-        "caption": "Muchos profesionales y equipos buscan resultados diferentes, pero repiten los mismos pasos sin darse cuenta. A menudo, el mayor avance llega cuando nos atrevemos a mirar justo donde siempre evitamos.\n\nNo se trata de luchar contra lo que sentimos o pensamos, sino de reconocerlo. Ahí empieza el verdadero cambio. ¿Te atreves a mirar con nuevos ojos?",
-        "hashtags": "#liderazgo #equipos #crecimientopersonal #coaching #cambios #autoconocimiento #resultados #patrones #propósito #motivación"
-    }
+    "image_url": "https://res.cloudinary.com/dlvxgjflw/image/upload/v1752496731/social/oxmfbgpfk2skedu41py4.png"
 }

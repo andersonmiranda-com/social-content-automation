@@ -11,9 +11,13 @@ from langserve import add_routes
 
 # Import the main pipeline
 from pipelines.social_post_pipeline import social_post_pipeline
+from utils.logger import setup_logger
 
 # Load environment variables
 load_dotenv()
+
+# Setup logger
+logger = setup_logger(__name__)
 
 # Create the FastAPI app
 app = FastAPI(
@@ -54,9 +58,8 @@ def read_root():
 # Optional: Add a check for the API key on startup
 @app.on_event("startup")
 async def startup_event():
+    logger.info("Application starting up...")
     if not os.getenv("OPENAI_API_KEY"):
-        print("\n" + "=" * 80)
-        print("WARNING: OPENAI_API_KEY environment variable not set.")
-        print("The application will run, but any calls to OpenAI will fail.")
-        print("Please create a .env file and add your OpenAI API key to it.")
-        print("=" * 80 + "\n")
+        logger.warning("OPENAI_API_KEY environment variable not set.")
+        logger.warning("The application will run, but any calls to OpenAI will fail.")
+        logger.warning("Please create a .env file and add your OpenAI API key to it.")

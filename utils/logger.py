@@ -18,5 +18,3 @@ def setup_logger(name: str = "social_automation") -> logging.Logger:
         logger.addHandler(handler)
 
     return logger
-
-    return logger

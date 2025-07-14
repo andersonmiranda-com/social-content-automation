@@ -1,5 +1,6 @@
 # Configuration for image generation
-# This can include details about the image model, style, etc.
+# Unified configuration for both dall-e-3 and other image models.
+# The 'style' and 'quality' parameters are only used if the model is 'dall-e-3'.
 model: "dall-e-3"
 style: "vivid"
-quality: "hd" 
+quality: "hd"

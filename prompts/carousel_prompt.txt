@@ -19,11 +19,11 @@ Asegúrate de que la salida sea un único bloque de código JSON válido sin tex
 
 ```json
 {{
-  "content": "...",     // Listado de 3 a 5 frases potentes, una por slide.
-  "title": "...",       // Título corto tipo “Facebook ad headline”.
-  "subtitle": "...",    // Subtítulo corto.
-  "caption": "...",     // Resumen en 2 párrafos breves, para el texto del post.
-  "hashtags": "..."     // 10 hashtags relevantes separados por espacio.
+  "content": "String único con el texto de todos los slides. Usa '\\n' para separar cada slide.",
+  "title": "...",
+  "subtitle": "...",
+  "caption": "...",
+  "hashtags": "..."
 }}
 ```
 

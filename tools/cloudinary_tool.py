@@ -4,23 +4,56 @@ Fake Cloudinary Tool
 """
 
 from langchain_core.runnables import RunnableLambda
+from services.cloudinary_client import cloudinary_client
+from utils.logger import setup_logger
+
+logger = setup_logger(__name__)
+
+
+def _is_base64(s: str) -> bool:
+    """Check if a string is a valid base64 encoded string."""
+    import base64
+    import re
+
+    # This regex is a simple check for base64 characters.
+    # A more robust check might be needed for production.
+    if not isinstance(s, str) or not re.match(r"^[A-Za-z0-9+/=]+$", s):
+        return False
+    try:
+        base64.b64decode(s)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _upload_image_logic(data: dict) -> dict:
     """
-    Receives image data, prints it, and returns a (fake) Image URL.
+    Receives image data (URL or b64_json), uploads it to Cloudinary, and returns the new URL.
     """
-    image_url_to_upload = data.get("image_url", "no_url_provided")
+    image_data_to_upload = data.get("image_data")
+    if not image_data_to_upload:
+        raise ValueError("No 'image_data' provided for upload.")
 
-    print(f"--- ☁️ Uploading to Cloudinary ---")
-    print(f"   Uploading image from: {image_url_to_upload}")
+    logger.info("--- ☁️ Uploading to Cloudinary ---")
 
-    # Simulate a new URL after upload
-    fake_cloudinary_url = f"https://res.cloudinary.com/demo/image/upload/v1/{image_url_to_upload.split('/')[-1]}.jpg"
-    print(f"   ✅  Upload complete. New URL: {fake_cloudinary_url}")
+    upload_source = image_data_to_upload
+    if _is_base64(image_data_to_upload):
+        logger.info("   Uploading from Base64 data.")
+        upload_source = f"data:image/png;base64,{image_data_to_upload}"
+    else:
+        logger.info(f"   Uploading from URL: {image_data_to_upload}")
+
+    upload_result = cloudinary_client.upload_image(upload_source)
+
+    # Extract the secure URL from the response
+    cloudinary_url = upload_result.get("secure_url")
+    if not cloudinary_url:
+        raise ValueError("Cloudinary upload failed, no 'secure_url' in response.")
+
+    logger.info(f"   ✅  Upload complete. New URL: {cloudinary_url}")
 
     # Return a generic key, not a service-specific one.
-    return {"image_url": fake_cloudinary_url}
+    return {"image_url": cloudinary_url}
 
 
 upload_to_cloudinary_chain = RunnableLambda(_upload_image_logic)

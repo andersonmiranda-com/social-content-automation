@@ -34,8 +34,7 @@ class GoogleSheetsClient:
             else:
                 if not os.path.exists(credentials_file):
                     logger.error(f"Missing credentials file: '{credentials_file}'")
-                    print(
-                        f"❌ Missing credentials file: '{credentials_file}'\n"
+                    logger.error(
                         f"Please download it from your Google Cloud project and place it in the root directory."
                     )
                     return None

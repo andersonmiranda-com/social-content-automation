@@ -4,7 +4,7 @@ Configuration loader for YAML files.
 
 import os
 from pathlib import Path
-
+import re
 import yaml
 
 from utils.logger import setup_logger
@@ -12,6 +12,24 @@ from utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 CONFIG_CACHE = {}
+
+
+def _replace_env_vars(config: dict) -> dict:
+    """Recursively replaces environment variable placeholders in the config."""
+    env_var_pattern = re.compile(r"\$\{(.*?)\}")
+
+    for key, value in config.items():
+        if isinstance(value, str):
+            match = env_var_pattern.match(value)
+            if match:
+                env_var_name = match.group(1)
+                env_var_value = os.getenv(env_var_name)
+                if env_var_value is None:
+                    logger.warning(f"Environment variable '{env_var_name}' not found.")
+                config[key] = env_var_value
+        elif isinstance(value, dict):
+            _replace_env_vars(value)
+    return config
 
 
 def load_config(config_name: str) -> dict:
@@ -42,4 +60,4 @@ def load_config(config_name: str) -> dict:
             specific_config = yaml.safe_load(f) or {}
         config.update(specific_config)
 
-    return config
+    return _replace_env_vars(config)
