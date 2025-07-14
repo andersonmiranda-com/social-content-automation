@@ -52,14 +52,14 @@ def _save_to_sheet_logic(data: dict) -> dict:
 
 def _read_from_sheet_logic(data: dict) -> dict:
     """
-    Simulates reading all rows from a Google Sheet.
+    Reads all rows from a Google Sheet.
     """
     logger.info("--- 📥 Reading from Google Sheets ---")
 
     # In a real implementation, you would connect to the Google Sheets API here.
     # For this simulation, we'll read from a local CSV file.
     client = GoogleSheetsClient()
-    sheet_data = client.read_sheet()
+    sheet_data = client.read_sheet(range_name=data.get("range_name"))
 
     if sheet_data is not None:
         logger.info(f"Read {len(sheet_data)} rows from the sheet.")
@@ -77,12 +77,14 @@ def _upsert_sheet_logic(data: dict) -> dict:
     """
     Receives filter criteria and data to upsert into a Google Sheet.
     Expected keys in data: 'filter_key', 'filter_value', 'row_data'.
+    An optional 'range_name' can be provided.
     """
     logger.info("--- ✍️ Upserting to Google Sheets ---")
 
     filter_key = data.get("filter_key")
     filter_value = data.get("filter_value")
     row_data = data.get("row_data")
+    range_name = data.get("range_name")
 
     if not all([filter_key, filter_value, row_data]):
         raise ValueError(
@@ -94,7 +96,9 @@ def _upsert_sheet_logic(data: dict) -> dict:
     assert row_data is not None
 
     client = GoogleSheetsClient()
-    result = client.upsert_row(filter_key, str(filter_value), row_data)
+    result = client.upsert_row(
+        filter_key, str(filter_value), row_data, range_name=range_name
+    )
 
     if result:
         logger.info(
@@ -106,6 +110,10 @@ def _upsert_sheet_logic(data: dict) -> dict:
         data["upsert_status"] = "failed"
 
     # Return the original data bag for subsequent steps
+
+    logger.info("--- Upserting to Google Sheets Finished ---")
+    logger.info(data)
+
     return data
 
 
