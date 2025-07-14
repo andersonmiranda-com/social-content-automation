@@ -1,35 +1,28 @@
 {
-    "id_topic": "31",
-    "category": "Facilitación",
-    "topic": "Facilitar no es calmar, es permitir que emerja lo que ya está",
-    "level": "alto",
-    "objective": "reflexionar",
-    "content_data": {
-        "id_topic": "31",
-        "category": "Facilitación",
-        "topic": "Facilitar no es calmar, es permitir que emerja lo que ya está",
-        "level": "alto",
-        "objective": "reflexionar",
-        "reel": {
-            "content": "¿Te ha pasado que te levantas y piensas: otra vez lo mismo? A veces parece que todo va en automático. El trabajo, las reuniones, los correos… Y te preguntas: ¿esto es todo? Mira, no eres un robot. Todos necesitamos parar y preguntarnos: ¿para qué hago lo que hago? Cuando te conectas con tu propósito, hasta los lunes tienen otro color. No es magia, es claridad. Y la claridad te da impulso. Hoy, solo te invito a hacerte esa pregunta. Porque cuando miras de verdad, encuentras respuestas. Y cuando encuentras respuestas, cambias el rumbo. El cambio empieza con una pregunta honesta. Atrévete a mirarte distinto.",
-            "title": "¿Otra vez lo mismo?",
-            "subtitle": "El cambio empieza con una pregunta.",
-            "caption": "Muchas veces vivimos en automático y ni siquiera nos damos cuenta. El trabajo, las rutinas, los compromisos… todo se repite y nos desconectamos de lo que realmente importa.\n\nPero basta con una pregunta honesta para empezar a ver las cosas de otra manera. Cuando conectas con tu propósito, todo tiene más sentido. Atrévete a mirarte distinto y verás cómo empieza el cambio.",
-            "hashtags": "#propósito #cambio #claridad #motivación #equipos #liderazgo #coaching #bienestar #autenticidad #crecimiento"
-        },
-        "post": {
-            "content": "Hay días en los que parece que todo se repite. Mismas reuniones, mismas conversaciones, mismos resultados. Y uno se pregunta: ¿qué estoy haciendo mal?  \n\nA veces no es cuestión de hacer más, sino de mirar diferente. Nos acostumbramos tanto a ciertos patrones que ni los notamos. Es como si lleváramos unas gafas con el mismo filtro de siempre. Y claro, vemos lo de siempre.  \n\nPero, ¿y si hoy te quitas esas gafas? ¿Y si pruebas a escuchar de verdad a tu equipo, o a ti mismo? A veces, un pequeño cambio de mirada abre puertas que ni sabíamos que estaban ahí.  \n\nNo se trata de reinventar la rueda. Se trata de reconectar con lo que de verdad importa. Con lo esencial. ¿Te atreves a mirar tu día a día con ojos nuevos?",
-            "title": "¿Y si el cambio empieza por cómo miras?",
-            "subtitle": "Rompe el patrón, cambia el resultado.",
-            "caption": "Muchos días parecen una copia del anterior. Pero el verdadero cambio empieza cuando nos atrevemos a ver las cosas desde otra perspectiva.  \n\nA veces, basta con un pequeño giro para descubrir nuevas posibilidades en lo que parecía rutinario.",
-            "hashtags": "#liderazgo #equipos #cambio #mentalidad #coaching #propósito #motivación #trabajoenequipo #desarrollopersonal #resultados"
-        },
-        "carousel": {
-            "content": "Slide 1: ¿Te has parado a pensar por qué repites siempre los mismos errores?\n\nSlide 2: A veces no es falta de ganas, es que llevas el piloto automático puesto.\n\nSlide 3: Los patrones no se ven desde dentro. Y mucho menos, cuando tienes prisa.\n\nSlide 4: Parar, mirar y preguntarte: ¿esto me acerca o me aleja de lo que quiero?\n\nSlide 5: El primer paso para cambiar algo, siempre es verlo de frente.\n\nSlide 6: Reflexión: No eres tus errores. Eres la persona que decide qué hacer con ellos. Hoy puedes elegir distinto.",
-            "title": "¿Por qué repito siempre lo mismo?",
-            "subtitle": "Rompe el ciclo y mira con otros ojos.",
-            "caption": "A veces, nos frustramos porque caemos una y otra vez en los mismos errores. Y pensamos que es falta de voluntad o que simplemente "somos así". Pero muchas veces, solo estamos en automático, repitiendo lo que aprendimos sin darnos cuenta.\n\nLa clave está en parar, mirar y preguntarnos: ¿esto me sirve? Cuando te das permiso para ver tus patrones, puedes empezar a cambiarlos. El cambio empieza cuando te atreves a mirar de frente.",
-            "hashtags": "#patrones #cambio #autoconocimiento #liderazgo #equipos #coaching #crecimientopersonal #conciencia #proposito #resultados"
-        }
+    "id_topic": "46",
+    "category": "Liderazgo Personal",
+    "topic": "Si no lideras tu energía, otros decidirán en qué gastarla",
+    "level": "medio",
+    "objective": "desafiar",
+    "reel_data": {
+        "content": "A veces te esfuerzas tanto en cambiar algo, que te olvidas de mirar de dónde viene. ¿Te ha pasado? Te repites: “Tengo que hacerlo mejor”. Pero, ¿y si no se trata de hacerlo más fuerte, sino de mirar diferente? A veces el problema no está en lo que haces, sino en lo que no ves. Cuando te das permiso para parar y observar, encuentras respuestas donde antes solo había presión. No se trata de ir más rápido, sino de ir más profundo. El verdadero cambio empieza cuando te atreves a mirar lo que siempre has evitado. ¿Te atreves a mirar de otra forma hoy?",
+        "title": "¿Y si el cambio no es fuerza, sino mirada?",
+        "subtitle": "El primer paso no siempre es avanzar, a veces es parar.",
+        "caption": "Muchas veces intentamos cambiar a base de esfuerzo, sin darnos cuenta de que el verdadero bloqueo está en lo que no queremos mirar. Parar y observar puede darte respuestas que la prisa nunca te dará.\n\nEl cambio real empieza cuando te permites ver con otros ojos. ¿Listo para mirar diferente y encontrar nuevas posibilidades?",
+        "hashtags": "#coaching #equipos #cambiopersonal #liderazgo #autoconocimiento #desarrolloprofesional #motivacion #crecimientopersonal #trabajoenequipo #miradadiferente"
+    },
+    "post_data": {
+        "content": "Hay días en los que parece que todo pesa el doble. Las reuniones se alargan, las tareas se acumulan y la cabeza no para. Nos decimos: “Ya pasará”. Pero, ¿y si no se trata solo de esperar?  \n\nA veces, lo que más nos bloquea no es el trabajo en sí, sino cómo lo miramos. Nos olvidamos de parar, respirar y preguntarnos: ¿para qué hago lo que hago? ¿Qué sentido tiene para mí?  \n\nCuando conectamos con el propósito, hasta lo más rutinario cambia de color. No se trata de grandes discursos ni de buscar la motivación en libros. Es algo sencillo: recordar lo que nos mueve.  \n\nHoy, te invito a hacer una pausa. A mirar tu día con otros ojos. ¿Qué pequeño gesto puedes cambiar para reconectar con lo que te importa?",
+        "title": "Redescubre el sentido de tu trabajo",
+        "subtitle": "Una pausa puede cambiarlo todo",
+        "caption": "Hay días en los que todo parece cuesta arriba. Pero a veces, lo que más nos pesa no es la carga, sino cómo la miramos.\n\nHacer una pausa para reconectar con el propósito puede transformar nuestra energía y nuestros resultados.",
+        "hashtags": "#propósito #motivación #bienestar #equipos #liderazgo #coaching #claridad #resultados #trabajo #desarrollo"
+    },
+    "carousel_data": {
+        "content": "Slide 1: ¿Y si el mayor bloqueo está justo donde no miras?\n\nSlide 2: A veces, lo que más evitamos es lo que más nos enseña.\n\nSlide 3: Los patrones no son enemigos, solo mensajes que esperan ser escuchados.\n\nSlide 4: Cuando te atreves a mirar de frente, algo dentro cambia.\n\nSlide 5: El primer paso no es resolver. Es reconocer.",
+        "title": "Atrévete a mirar donde nunca miras",
+        "subtitle": "El cambio empieza con una mirada honesta",
+        "caption": "Muchos profesionales y equipos buscan resultados diferentes, pero repiten los mismos pasos sin darse cuenta. A menudo, el mayor avance llega cuando nos atrevemos a mirar justo donde siempre evitamos.\n\nNo se trata de luchar contra lo que sentimos o pensamos, sino de reconocerlo. Ahí empieza el verdadero cambio. ¿Te atreves a mirar con nuevos ojos?",
+        "hashtags": "#liderazgo #equipos #crecimientopersonal #coaching #cambios #autoconocimiento #resultados #patrones #propósito #motivación"
     }
 }
