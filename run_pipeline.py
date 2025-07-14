@@ -19,16 +19,14 @@ else:
     # Import the pipeline we built
     from pipelines.social_post_pipeline import social_post_pipeline
 
-    # Define the initial input for the pipeline
-    input_data = {"topic": "The benefits of meditation for developers"}
-
     print("--- Starting Pipeline ---")
-    print(f"Input Topic: {input_data['topic']}")
+    print("The pipeline will now read from the sheet and select a topic on its own.")
     print("-" * 20)
 
     # HERE IS THE INVOKE CALL
     # We call .invoke() on the fully constructed pipeline object
-    final_result = social_post_pipeline.invoke(input_data)
+    # An empty dictionary is passed as input because the pipeline is self-sufficient
+    final_result = social_post_pipeline.invoke({})
 
     print("-" * 20)
     print("--- Pipeline Finished ---")

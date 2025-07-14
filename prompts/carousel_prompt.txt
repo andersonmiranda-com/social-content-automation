@@ -1,13 +1,15 @@
-## �� TIPO DE CONTENIDO: POST
+## 🧩 TIPO DE CONTENIDO: CARRUSEL
 
-Genera el contenido en formato **POST**.
+Genera el contenido en formato **CARRUSEL**.
 
-- Texto de 3–5 párrafos.
-- Comienza con una escena o tensión.
-- Desarrolla una idea profunda sin tecnicismos.
-- Termina con pregunta reflexiva o idea inspiradora.
+- Listado de 3 a 5 frases potentes, una por slide.
+- Slide 1: Gancho visual impactante.
+- Slides 2–6: Desarrollo.
+- Slide final: Reflexión + frase de cierre emocional o estratégica.
 
-> Escribe el contenido directamente, sin explicar el formato ni poner títulos visibles.
+Cada slide debe ser separado por linebreak, y ponga la indicacion:
+
+Slide x: Texto del slide
 
 ---
 
@@ -17,7 +19,7 @@ Asegúrate de que la salida sea un único bloque de código JSON válido sin tex
 
 ```json
 {{
-  "content": "...",     // Texto completo del post de 3-5 párrafos.
+  "content": "...",     // Listado de 3 a 5 frases potentes, una por slide.
   "title": "...",       // Título corto tipo “Facebook ad headline”.
   "subtitle": "...",    // Subtítulo corto.
   "caption": "...",     // Resumen en 2 párrafos breves, para el texto del post.

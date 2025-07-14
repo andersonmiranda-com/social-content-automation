@@ -8,17 +8,11 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from langserve import add_routes
 
-# Import the main pipeline and the input schema
+# Import the main pipeline
 from pipelines.social_post_pipeline import social_post_pipeline
-from schemas import SocialPostInput
 
 # Load environment variables
 load_dotenv()
-
-# Create a new, typed pipeline by attaching the Pydantic model.
-# This does NOT change the runtime behavior of the pipeline (it still gets a dict),
-# but it gives LangServe the necessary information to build the UI.
-typed_pipeline = social_post_pipeline.with_types(input_type=SocialPostInput)  # type: ignore
 
 # Create the FastAPI app
 app = FastAPI(
@@ -27,10 +21,11 @@ app = FastAPI(
     description="An API for generating social media content using LangChain.",
 )
 
-# Add the LangServe route for our NEW typed pipeline
+# Add the LangServe route for our pipeline
+# No need for .with_types() as the pipeline doesn't require a specific input schema anymore.
 add_routes(
     app,
-    typed_pipeline,
+    social_post_pipeline,
     path="/social-post",
 )
 
