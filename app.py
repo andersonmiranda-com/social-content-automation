@@ -3,22 +3,17 @@ Main FastAPI application to serve the LangChain pipelines.
 """
 
 import os
+from typing import List
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from langserve import add_routes
 
-# Import the main pipeline and the input schema
+# Import the main pipeline
 from pipelines.social_post_pipeline import social_post_pipeline
-from schemas import SocialPostInput
 
 # Load environment variables
 load_dotenv()
-
-# Create a new, typed pipeline by attaching the Pydantic model.
-# This does NOT change the runtime behavior of the pipeline (it still gets a dict),
-# but it gives LangServe the necessary information to build the UI.
-typed_pipeline = social_post_pipeline.with_types(input_type=SocialPostInput)  # type: ignore
 
 # Create the FastAPI app
 app = FastAPI(
@@ -27,10 +22,25 @@ app = FastAPI(
     description="An API for generating social media content using LangChain.",
 )
 
-# Add the LangServe route for our NEW typed pipeline
+
+@app.post("/invoke")
+async def invoke_pipeline() -> List[dict]:
+    """
+    Invokes the social post pipeline.
+    This endpoint uses .batch() to run the pipeline in a controlled manner,
+    which is more stable for heavy, CPU-intensive tasks under a server environment.
+    We pass a list with a single empty dictionary to trigger one full run.
+    """
+    # Use .batch() for a more stable, controlled execution of the pipeline.
+    results = await social_post_pipeline.abatch([{}])
+    return results
+
+
+# Add the LangServe routes for interactive development and playground.
+# This provides a UI but may be less stable for very heavy, parallel loads.
 add_routes(
     app,
-    typed_pipeline,
+    social_post_pipeline,
     path="/social-post",
 )
 

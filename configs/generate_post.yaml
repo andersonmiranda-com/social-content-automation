@@ -1,3 +1,7 @@
-model: "gpt-4o-mini"
-temperature: 0.7
-prompt_template: "prompts/post_prompt.txt" 
+model: "gpt-3.5-turbo"
+temperature: 0.5
+system_prompt_template: "prompts/post_system_prompt.txt"
+user_prompts:
+  reel: "prompts/reel_prompt.txt"
+  post: "prompts/post_prompt.txt"
+  carousel: "prompts/carousel_prompt.txt"

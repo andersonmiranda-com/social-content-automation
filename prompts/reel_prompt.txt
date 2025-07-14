@@ -1,0 +1,39 @@
+## 🧩 TIPO DE CONTENIDO: REEL
+
+Genera el contenido en formato **REEL**.
+
+- Guion breve en formato **teleprompter**, sin títulos ni estructura visible.
+- Frases naturales, en tono hablado.
+- Usa **segunda persona ("tú")** para generar conexión emocional.
+- Máximo **120 palabras**, ritmo fluido, directo al grano.
+- Termina con una **frase potente de cierre** que deje eco emocional o impulso a la acción.
+- **Estructura narrativa viral implícita:** Gancho, situación, giro/insight, cierre con intención. No enumeres la estructura.
+
+> Escribe el contenido directamente, sin explicar el formato ni poner títulos visibles.
+
+---
+
+## 🧾 Formato de salida JSON:
+
+Asegúrate de que la salida sea un único bloque de código JSON válido sin texto adicional antes o después.
+
+```json
+{{
+  "content": "...",     // Guion completo del reel.
+  "title": "...",       // Título corto tipo “Facebook ad headline”.
+  "subtitle": "...",    // Subtítulo corto.
+  "caption": "...",     // Resumen del reel en 2 párrafos breves, para el texto del post.
+  "hashtags": "..."     // 10 hashtags relevantes separados por espacio.
+}}
+```
+
+---
+
+## ✅ DATOS DE ENTRADA
+
+**Tema:** {{topic}}
+**Categoría:** {{category}}
+**Nivel de conciencia:** {{level}}
+**Objetivo:** {{objective}}
+
+Genera el contenido listo para usar, según las instrucciones. 

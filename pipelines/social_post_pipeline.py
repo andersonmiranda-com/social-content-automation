@@ -14,7 +14,11 @@ from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from chains.generate_image import generate_image_chain
 
 # Import all the building blocks (chains)
-from chains.generate_post import generate_post_chain
+from chains.generate_post import (
+    generate_carousel_chain,
+    generate_post_chain,
+    generate_reel_chain,
+)
 from chains.select_topic import select_topic_chain
 from chains.upload_chain import upload_chain
 from tools.google_sheets_tool import read_from_sheet_chain, save_to_sheet_chain
@@ -35,13 +39,24 @@ social_post_pipeline = (
     read_from_sheet_chain
     # Step 2: Filter for unposted topics and select one randomly
     | select_topic_chain
-    # Step 2.5: Extract the topic text for the next step, keeping the full row
-    # | RunnablePassthrough.assign(topic=itemgetter("topic"))
-    # # Step 3: Generate post data, add it to the bag as 'post_data'
-    # | RunnablePassthrough.assign(post_data=generate_post_chain)
-    # # Step 4: Generate image data from 'post_data', add it as 'image_data'
+    # Step 3: Generate all content types in parallel using the specialized chains.
+    | RunnablePassthrough.assign(
+        content_data=RunnablePassthrough.assign(
+            reel=generate_reel_chain,
+            post=generate_post_chain,
+            carousel=generate_carousel_chain,
+        )
+    )
+    # The subsequent steps (image generation, upload, save) are commented out
+    # as they need to be adapted to handle the new `content_data` structure.
+    # For example, you might want to generate one image based on the "post" content.
+    #
+    # # Step 4: Generate image data from 'post' content, add it as 'image_data'
     # | RunnablePassthrough.assign(
-    #     image_data=(RunnableLambda(lambda x: x["post_data"]) | generate_image_chain)
+    #     image_data=(
+    #         RunnableLambda(lambda x: x["content_data"]["post"])
+    #         | generate_image_chain
+    #     )
     # )
     # # Step 5: Upload image and assign just the final URL to a new key
     # | RunnablePassthrough.assign(
