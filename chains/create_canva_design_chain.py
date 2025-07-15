@@ -21,7 +21,7 @@ from utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 # Constants for Canva polling
-FIXED_WAIT_SECONDS = 10
+FIXED_WAIT_SECONDS = 5
 
 
 async def create_canva_design(post_data: Dict[str, Any]) -> Dict[str, Any]:

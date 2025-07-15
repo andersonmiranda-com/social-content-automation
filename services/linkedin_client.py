@@ -26,7 +26,7 @@ logger = setup_logger(__name__)
 TOKEN_FILE = "linkedin_token.json"
 AUTHORIZATION_URL = "https://www.linkedin.com/oauth/v2/authorization"
 TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
-API_BASE_URL = "https://api.linkedin.com/v2"
+API_BASE_URL = "https://api.linkedin.com"
 
 
 class LinkedInClient:
@@ -132,11 +132,29 @@ class LinkedInClient:
             # Wait for the user to authorize and the local server to capture the redirect
             authorization_response = self._wait_for_auth_code()
 
+            logger.info(
+                f"Full authorization callback URL received: {authorization_response}"
+            )
+
             logger.info("Authorization response received. Fetching token manually...")
             try:
                 # Manual token fetch using requests to bypass oauthlib issues
                 parsed_url = urlparse(authorization_response)
                 query_params = parse_qs(parsed_url.query)
+
+                # Check for an error returned from LinkedIn
+                if "error" in query_params:
+                    error = query_params.get("error", ["Unknown"])[0]
+                    error_description = query_params.get(
+                        "error_description", ["No description provided."]
+                    )[0]
+                    error_message = (
+                        f"LinkedIn authorization failed. Error: '{error}'. "
+                        f"Description: '{error_description}'"
+                    )
+                    logger.error(error_message)
+                    raise ValueError(error_message)
+
                 auth_code = query_params.get("code", [None])[0]
 
                 if not auth_code:
@@ -215,7 +233,6 @@ class LinkedInClient:
         request_headers = {
             "Content-Type": "application/json",
             "X-Restli-Protocol-Version": "2.0.0",
-            "LinkedIn-Version": "202305",  # Use a recent, pinned version
         }
         if headers:
             request_headers.update(headers)
@@ -246,18 +263,49 @@ class LinkedInClient:
         Fetches the authenticated user's profile information using the OIDC /userinfo endpoint.
         The user URN (e.g., 'urn:li:person:xxxx') is required for posting.
         """
-        logger.info("Fetching user profile from LinkedIn's /userinfo endpoint...")
-        response = self._request("GET", "userinfo")
-        profile_data = response.json()
+        # This endpoint is part of OIDC and has a fixed, absolute URL,
+        # separate from the versioned /rest API.
+        userinfo_url = "https://api.linkedin.com/v2/userinfo"
+        logger.info(
+            f"Fetching user profile from LinkedIn's OIDC endpoint: {userinfo_url}"
+        )
 
-        # Adapt the userinfo response to match the structure expected by other methods
-        # The 'sub' field from /userinfo corresponds to the URN needed for posting
-        profile_data["id"] = profile_data.get("sub")
-        profile_data["localizedFirstName"] = profile_data.get("given_name")
-        profile_data["localizedLastName"] = profile_data.get("family_name")
+        try:
+            # We make a direct request here instead of using self._request
+            # because _request is designed for the versioned /rest/ API.
+            response = self.session.get(userinfo_url)
+            response.raise_for_status()
+            profile_data = response.json()
 
-        logger.info(f"Successfully fetched profile for: {profile_data.get('name')}")
-        return profile_data
+            # Adapt the OIDC userinfo response to the structure our app needs.
+            # The 'sub' field from /userinfo corresponds to the person URN for posting.
+            user_id = profile_data.get("sub")
+            if not user_id:
+                raise ValueError(
+                    "Could not find 'sub' (person ID) in OIDC userinfo response."
+                )
+
+            # Ensure the ID is in the full URN format required by the UGC Posts API.
+            if not user_id.startswith("urn:li:person:"):
+                author_urn = f"urn:li:person:{user_id}"
+            else:
+                author_urn = user_id
+
+            profile_data["id"] = author_urn
+            profile_data["localizedFirstName"] = profile_data.get("given_name")
+            profile_data["localizedLastName"] = profile_data.get("family_name")
+            full_name = profile_data.get("name", "")
+
+            logger.info(
+                f"Successfully fetched profile for: {full_name} (URN: {author_urn})"
+            )
+            return profile_data
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API request to {userinfo_url} failed: {e}")
+            if e.response is not None:
+                logger.error(f"Response Body: {e.response.text}")
+            raise
 
     def publish_text_post(self, text: str) -> Dict[str, Any]:
         """Publishes a text-only post to LinkedIn."""
@@ -277,7 +325,7 @@ class LinkedInClient:
         }
 
         logger.info("Publishing text post to LinkedIn...")
-        response = self._request("POST", "ugcPosts", json_data=post_body)
+        response = self._request("POST", "v2/ugcPosts", json_data=post_body)
         post_data = response.json()
         logger.info(f"Successfully published post with ID: {post_data['id']}")
         return post_data
@@ -288,6 +336,18 @@ class LinkedInClient:
         Returns the asset URN and the upload URL.
         """
         logger.info("Registering image upload with LinkedIn...")
+        logger.info(f"Author URN being sent: {author_urn}")
+
+        url = f"{self.base_url}/v2/assets?action=registerUpload"
+
+        # Manually construct headers to ensure no unexpected values are added
+        # by the requests-oauthlib session object.
+        headers = {
+            "Authorization": f"Bearer {self.session.token['access_token']}",
+            "Content-Type": "application/json",
+            "X-Restli-Protocol-Version": "2.0.0",
+        }
+
         register_body = {
             "registerUploadRequest": {
                 "recipes": ["urn:li:digitalmediaRecipe:feedshare-image"],
@@ -300,21 +360,51 @@ class LinkedInClient:
                 ],
             }
         }
-        response = self._request(
-            "POST", "assets?action=registerUpload", json_data=register_body
-        )
-        upload_data = response.json()
-        return {
-            "asset_urn": upload_data["value"]["asset"],
-            "upload_url": upload_data["value"]["uploadMechanism"][
-                "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
-            ]["uploadUrl"],
-        }
+
+        logger.info(f"Request body: {register_body}")
+
+        try:
+            # Using requests.post directly to make a clean, isolated call.
+            response = requests.post(url, headers=headers, json=register_body)
+
+            # Log response details for debugging
+            logger.info(f"Response Status: {response.status_code}")
+            logger.info(f"Response Headers: {dict(response.headers)}")
+
+            if response.status_code != 200:
+                logger.error(f"LinkedIn API returned status {response.status_code}")
+                logger.error(f"Response body: {response.text}")
+
+            response.raise_for_status()
+
+            upload_data = response.json()
+            logger.info("Successfully registered image upload")
+
+            return {
+                "asset_urn": upload_data["value"]["asset"],
+                "upload_url": upload_data["value"]["uploadMechanism"][
+                    "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
+                ]["uploadUrl"],
+            }
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to register image upload: {e}")
+            if hasattr(e, "response") and e.response is not None:
+                logger.error(f"Response status: {e.response.status_code}")
+                logger.error(f"Response body: {e.response.text}")
+            raise
+        except KeyError as e:
+            logger.error(f"Unexpected response structure: {e}")
+            logger.error(f"Response data: {upload_data}")
+            raise ValueError(f"Unexpected response structure from LinkedIn API: {e}")
+        except Exception as e:
+            logger.error(f"Unexpected error during image upload registration: {e}")
+            raise
 
     def _upload_image_data(self, upload_url: str, image_data: bytes):
         """Step 2: Upload the raw image bytes to the provided URL."""
         logger.info(f"Uploading image data to LinkedIn's storage...")
-        response = requests.put(
+        response = self.session.post(
             upload_url,
             data=image_data,
             headers={"Content-Type": "application/octet-stream"},
@@ -368,7 +458,7 @@ class LinkedInClient:
         }
 
         logger.info("Publishing post with image to LinkedIn...")
-        response = self._request("POST", "ugcPosts", json_data=post_body)
+        response = self._request("POST", "v2/ugcPosts", json_data=post_body)
         post_data = response.json()
         logger.info(f"Successfully published post with ID: {post_data['id']}")
         return post_data
