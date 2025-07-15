@@ -57,5 +57,10 @@ docs/_build/
 /configs/local.yaml
 
 # Credentials
+# We keep the credentials file, but ignore the token file
 /configs/google_sheets_credentials.json
-/configs/google_sheets_token.json
+
+# Tokens
+token.json
+canva_token.json
+google_sheets_token.json

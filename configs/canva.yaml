@@ -1,0 +1,14 @@
+# Canva API Configuration
+# This file stores configuration settings for the Canva API client.
+
+# The client ID for your Canva API app.
+# It can also be set using the CANVA_CLIENT_ID environment variable.
+client_id: ${CANVA_CLIENT_ID}
+
+# The client secret for your Canva API app.
+# It can also be set using the CANVA_CLIENT_SECRET environment variable.
+client_secret: ${CANVA_CLIENT_SECRET}
+
+# The brand template ID to be used for generating images.
+# This ID is specific to the design template in Canva.
+brand_template_id: "EAGss6d8K8o"

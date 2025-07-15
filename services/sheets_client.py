@@ -21,11 +21,37 @@ class GoogleSheetsClient:
 
     def _get_credentials(self):
         creds = None
-        token_file = self.config["token_file"]
+        # Use a consistent name for the token file, now expected in the root
+        token_file = "google_sheets_token.json"
         credentials_file = self.config["credentials_file"]
         scopes = self.config["scopes"]
 
-        if os.path.exists(token_file):
+        # --- Production-first: Try to load from environment variables ---
+        refresh_token = os.environ.get("GOOGLE_REFRESH_TOKEN")
+
+        if refresh_token:
+            logger.info(
+                "Found GOOGLE_REFRESH_TOKEN. Building credentials from environment."
+            )
+            # We still need client_id and client_secret from the credentials file
+            with open(credentials_file, "r") as f:
+                creds_data = json.load(f).get("installed", {})
+
+            creds = Credentials.from_authorized_user_info(
+                {
+                    "refresh_token": refresh_token,
+                    "client_id": creds_data.get("client_id"),
+                    "client_secret": creds_data.get("client_secret"),
+                    "token_uri": creds_data.get(
+                        "token_uri", "https://oauth2.googleapis.com/token"
+                    ),
+                },
+                scopes=scopes,
+            )
+
+        # --- Fallback to local file for development ---
+        elif os.path.exists(token_file):
+            logger.info(f"Loading credentials from local file: {token_file}")
             creds = Credentials.from_authorized_user_file(token_file, scopes)
 
         if not creds or not creds.valid:

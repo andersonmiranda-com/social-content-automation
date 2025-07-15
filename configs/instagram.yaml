@@ -1,0 +1,10 @@
+# Instagram Graph API Configuration
+# This file stores configuration settings for the Instagram API client.
+
+# The user access token for the Facebook Graph API.
+# It can also be set using the INSTAGRAM_ACCESS_TOKEN environment variable.
+access_token: ""
+
+# The ID of the Instagram account to post to.
+# It can also be set using the INSTAGRAM_ACCOUNT_ID environment variable.
+instagram_account_id: ""
