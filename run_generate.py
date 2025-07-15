@@ -21,7 +21,7 @@ if not os.getenv("OPENAI_API_KEY"):
     logger.error("Please create a .env file and add your OpenAI API key to it.")
 else:
     # Import the pipeline we built
-    from pipelines.social_post_pipeline import social_post_pipeline
+    from pipelines.generate_social_post_pipeline import social_post_pipeline
 
     logger.info("--- Starting Pipeline ---")
     logger.info(

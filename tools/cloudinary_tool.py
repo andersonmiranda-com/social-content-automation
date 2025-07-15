@@ -28,22 +28,25 @@ def _is_base64(s: str) -> bool:
 
 def _upload_image_logic(data: dict) -> dict:
     """
-    Receives image data (URL or b64_json), uploads it to Cloudinary, and returns the new URL.
+    Receives image data (URL), uploads it to Cloudinary, and returns the new URL.
+    Optionally accepts a 'folder' to override the default.
     """
-    image_data_to_upload = data.get("image_data")
-    if not image_data_to_upload:
-        raise ValueError("No 'image_data' provided for upload.")
+    image_url = data.get("image_url")
+    if not image_url:
+        raise ValueError("No 'image_url' provided for upload.")
+
+    folder = data.get("folder")  # Can be None, client will use default
 
     logger.info("--- ☁️ Uploading to Cloudinary ---")
 
-    upload_source = image_data_to_upload
-    if _is_base64(image_data_to_upload):
+    upload_source = image_url
+    if _is_base64(image_url):
         logger.info("   Uploading from Base64 data.")
-        upload_source = f"data:image/png;base64,{image_data_to_upload}"
+        upload_source = f"data:image/png;base64,{image_url}"
     else:
-        logger.info(f"   Uploading from URL: {image_data_to_upload}")
+        logger.info(f"   Uploading from URL: {image_url}")
 
-    upload_result = cloudinary_client.upload_image(upload_source)
+    upload_result = cloudinary_client.upload(image_url=upload_source, folder=folder)
 
     # Extract the secure URL from the response
     cloudinary_url = upload_result.get("secure_url")
