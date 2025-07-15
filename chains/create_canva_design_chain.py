@@ -10,7 +10,7 @@ This chain handles the process of:
 
 import asyncio
 import base64
-from typing import Dict, Any, Callable, Awaitable
+from typing import Dict, Any
 
 import httpx
 from langchain.schema.runnable import RunnableLambda

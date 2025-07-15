@@ -1,15 +1,14 @@
 """
-Script to execute the social post publishing pipeline.
-
-This script initializes and runs the main pipeline to publish content
-to social media, and prints the final output.
+Main entry point for running the social content publishing pipeline.
 """
 
 import asyncio
-from dotenv import load_dotenv
+import json
+from typing import Dict, Any
 
 from pipelines.publish_social_post_pipeline import publish_social_post_pipeline
 from utils.logger import setup_logger
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,22 +16,14 @@ load_dotenv()
 logger = setup_logger(__name__)
 
 
-def main():
-    """
-    Main function to run the social post pipeline.
-    """
+async def main():
+    """Runs the main publishing pipeline and prints the result."""
     logger.info("Starting the social post publishing pipeline...")
-
-    # The input to the first chain is an empty dict for now
-    initial_input = {}
-
-    # Using asyncio.run for async compatibility if any chain is async
-    result = asyncio.run(publish_social_post_pipeline.ainvoke(initial_input))
-
-    logger.info("Pipeline execution finished.")
-    logger.info("Final output:")
-    logger.info(result)
+    initial_input: Dict[str, Any] = {}
+    result = await publish_social_post_pipeline.ainvoke(initial_input)
+    logger.info("Pipeline finished.")
+    print(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
