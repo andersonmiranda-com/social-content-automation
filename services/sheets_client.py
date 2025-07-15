@@ -28,23 +28,19 @@ class GoogleSheetsClient:
 
         # --- Production-first: Try to load from environment variables ---
         refresh_token = os.environ.get("GOOGLE_REFRESH_TOKEN")
+        client_id = os.environ.get("GOOGLE_CLIENT_ID")
+        client_secret = os.environ.get("GOOGLE_CLIENT_SECRET")
 
-        if refresh_token:
+        if refresh_token and client_id and client_secret:
             logger.info(
-                "Found GOOGLE_REFRESH_TOKEN. Building credentials from environment."
+                "Found Google tokens in environment. Building credentials from environment."
             )
-            # We still need client_id and client_secret from the credentials file
-            with open(credentials_file, "r") as f:
-                creds_data = json.load(f).get("installed", {})
-
             creds = Credentials.from_authorized_user_info(
                 {
                     "refresh_token": refresh_token,
-                    "client_id": creds_data.get("client_id"),
-                    "client_secret": creds_data.get("client_secret"),
-                    "token_uri": creds_data.get(
-                        "token_uri", "https://oauth2.googleapis.com/token"
-                    ),
+                    "client_id": client_id,
+                    "client_secret": client_secret,
+                    "token_uri": "https://oauth2.googleapis.com/token",
                 },
                 scopes=scopes,
             )
@@ -54,10 +50,12 @@ class GoogleSheetsClient:
             logger.info(f"Loading credentials from local file: {token_file}")
             creds = Credentials.from_authorized_user_file(token_file, scopes)
 
+        # If no valid credentials yet, try the full local auth flow
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
+                logger.info("No valid credentials found, starting local auth flow...")
                 if not os.path.exists(credentials_file):
                     logger.error(f"Missing credentials file: '{credentials_file}'")
                     logger.error(

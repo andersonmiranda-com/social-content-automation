@@ -16,6 +16,7 @@ from langchain.schema.runnable import Runnable, RunnableBranch, RunnablePassthro
 from chains.get_content_chain import get_content_chain
 from chains.create_canva_design_chain import create_canva_design_chain
 from chains.upload_chain import upload_chain
+from chains.publish_linkedin_post import linkedin_post_chain  # Import the new chain
 from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -69,6 +70,16 @@ def _route(data: Dict[str, Any]) -> Runnable:
         | RunnablePassthrough.assign(
             upload_result=lambda x: upload_chain.invoke(x["upload_input"])
         )
+        # --- Add LinkedIn Publishing Step ---
+        | RunnablePassthrough.assign(
+            linkedin_result=lambda x: linkedin_post_chain.invoke(
+                {
+                    "content": x.get("content"),
+                    "hashtags": x.get("hashtags"),
+                    "image_url": x.get("upload_result", {}).get("image_url"),
+                }
+            )
+        )
     )
     return main_flow
 
@@ -84,7 +95,18 @@ publish_social_post_pipeline: Runnable = (
         lambda x: {
             **x,
             "cloudinary_url": x.get("upload_result", {}).get("image_url"),
+            "linkedin_post_id": x.get("linkedin_result", {}).get("linkedin_post_id"),
             "status": x.get("final_result", "completed"),
         }
     )
 )
+
+if __name__ == "__main__":
+    import json
+
+    logger.info("🚀 Starting social post publishing pipeline...")
+    final_result = publish_social_post_pipeline.invoke({})
+    logger.info("✅ Pipeline finished.")
+
+    # Pretty-print the final result
+    print(json.dumps(final_result, indent=4))
