@@ -62,5 +62,4 @@ docs/_build/
 
 # Tokens
 token.json
-canva_token.json
-google_sheets_token.json
+*token.json

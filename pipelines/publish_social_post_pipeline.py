@@ -9,104 +9,98 @@ This pipeline orchestrates the process of:
 5. Updating the status of the content to mark it as published.
 """
 
+from operator import itemgetter
 from typing import Dict, Any
 
-from langchain.schema.runnable import Runnable, RunnableBranch, RunnablePassthrough
+from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 
 from chains.get_content_chain import get_content_chain
 from chains.create_canva_design_chain import create_canva_design_chain
 from chains.upload_chain import upload_chain
-from chains.publish_linkedin_post import linkedin_post_chain  # Import the new chain
+from chains.publish_linkedin_post import linkedin_post_chain
 from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
 
-def _should_generate_image(data: Dict[str, Any]) -> bool:
-    """Returns True if a new image should be generated."""
-    # The data is the post itself, no need to look for a nested key.
-    return not data.get("image_ready_url")
+def _stop_if_no_content(post: Dict[str, Any]) -> Dict[str, Any]:
+    """Stops the pipeline if no content is found, otherwise passes it through."""
+    if not post:
+        logger.warning("Pipeline stopping: No content found to publish.")
+        return {"status": "no_content", "message": "No content found to publish."}
+    return post
 
 
-def _prepare_data_for_upload(data: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Selects the correct image URL to be uploaded to Cloudinary.
-    The URL can be a temporary one from Canva or a pre-existing one.
-    """
-    # If a new design was created, use its download URL and specify the published folder.
-    if "canva_download_url" in data:
-        logger.info(
-            "Preparing Canva URL for Cloudinary upload to 'social_published' folder."
-        )
-        return {"image_url": data["canva_download_url"], "folder": "social_published"}
+def _create_image_if_needed(post: Dict[str, Any]) -> Dict[str, Any]:
+    """Runs the Canva chain only if 'image_ready_url' is missing."""
+    # If the pipeline was stopped, just pass the data through.
+    if post.get("status") == "no_content":
+        return post
 
-    # Otherwise, use the URL that was already in the sheet (folder will be default).
-    logger.info("Preparing existing image URL for Cloudinary upload.")
-    return {"image_url": data.get("image_ready_url")}
+    if not post.get("image_ready_url"):
+        logger.info("Image URL not found. Generating a new image with Canva.")
+        canva_result = create_canva_design_chain.invoke(post)
+        # Merge the Canva result back into the main dictionary.
+        return {**post, **canva_result}
 
-
-# Conditional logic: Decide whether to generate a new image or use an existing one.
-image_generation_branch = RunnableBranch(
-    (
-        _should_generate_image,  # Condition: if image_ready_url is empty
-        create_canva_design_chain,  # If true, run the Canva chain
-    ),
-    RunnablePassthrough(),  # If false, just pass the data through
-)
+    logger.info("Using existing image URL for the post.")
+    return post
 
 
-def _route(data: Dict[str, Any]) -> Runnable:
-    # If get_content_chain returns an empty dict, it means no post was found.
-    if not data:
-        return RunnablePassthrough.assign(
-            final_result=lambda x: "Pipeline stopped: No content found."
-        )
+def _prepare_upload_input(post: Dict[str, Any]) -> Dict[str, Any]:
+    """Prepares the dictionary for the Cloudinary upload chain."""
+    if post.get("status") == "no_content":
+        return {}  # Return empty to avoid invoking the chain.
 
-    # The main flow if a post is found.
-    main_flow = (
-        RunnablePassthrough.assign(canva_result=image_generation_branch)
-        | (lambda x: {**x, **x.pop("canva_result")})
-        | RunnablePassthrough.assign(upload_input=_prepare_data_for_upload)
-        | RunnablePassthrough.assign(
-            upload_result=lambda x: upload_chain.invoke(x["upload_input"])
-        )
-        # --- Add LinkedIn Publishing Step ---
-        | RunnablePassthrough.assign(
-            linkedin_result=lambda x: linkedin_post_chain.invoke(
-                {
-                    "content": x.get("content"),
-                    "hashtags": x.get("hashtags"),
-                    "image_url": x.get("upload_result", {}).get("image_url"),
-                }
-            )
-        )
-    )
-    return main_flow
+    # Choose the Canva URL if it exists; otherwise, use the pre-existing URL.
+    image_to_upload = post.get("canva_download_url") or post.get("image_ready_url")
+    return {"image_url": image_to_upload, "folder": "social_published"}
 
 
-# Full pipeline definition
-publish_social_post_pipeline: Runnable = (
-    # 1. Get the content
+def _prepare_linkedin_input(post: Dict[str, Any]) -> Dict[str, Any]:
+    """Prepares the dictionary for the LinkedIn publishing chain."""
+    if post.get("status") == "no_content":
+        return {}  # Return empty to avoid invoking the chain.
+
+    # The image_url for LinkedIn comes from the Cloudinary upload result.
+    image_url = post.get("upload_result", {}).get("image_url")
+    return {
+        "content": post.get("content"),
+        "hashtags": post.get("hashtags"),
+        "image_url": image_url,
+    }
+
+
+def _format_final_output(post: Dict[str, Any]) -> Dict[str, Any]:
+    """Cleans and formats the final dictionary returned by the pipeline."""
+    # If the pipeline was stopped, return the stop message as is.
+    if post.get("status") == "no_content":
+        return post
+
+    return {
+        "content": post.get("content"),
+        "hashtags": post.get("hashtags"),
+        "image_url": post.get("upload_result", {}).get("image_url"),
+        "linkedin_post_id": post.get("linkedin_result", {}).get("linkedin_post_id"),
+        "status": post.get("linkedin_result", {}).get("status", "completed"),
+    }
+
+
+publish_social_post_pipeline = (
+    # 1. Get content from Google Sheets.
     get_content_chain
-    # 2. Route to the correct path based on whether content was found
-    | _route
-    # 3. Merge the results for a clean final output
-    | (
-        lambda x: {
-            **x,
-            "cloudinary_url": x.get("upload_result", {}).get("image_url"),
-            "linkedin_post_id": x.get("linkedin_result", {}).get("linkedin_post_id"),
-            "status": x.get("final_result", "completed"),
-        }
+    # 2. Check if content exists; if not, stop the pipeline.
+    | RunnableLambda(_stop_if_no_content)
+    # 3. Create an image with Canva if it's needed.
+    | RunnableLambda(_create_image_if_needed)
+    # 4. Upload the final image to Cloudinary.
+    | RunnablePassthrough.assign(
+        upload_result=(RunnableLambda(_prepare_upload_input) | upload_chain)
     )
+    # 5. Publish the post to LinkedIn.
+    | RunnablePassthrough.assign(
+        linkedin_result=(RunnableLambda(_prepare_linkedin_input) | linkedin_post_chain)
+    )
+    # 6. Format the final output for clarity.
+    | RunnableLambda(_format_final_output)
 )
-
-if __name__ == "__main__":
-    import json
-
-    logger.info("🚀 Starting social post publishing pipeline...")
-    final_result = publish_social_post_pipeline.invoke({})
-    logger.info("✅ Pipeline finished.")
-
-    # Pretty-print the final result
-    print(json.dumps(final_result, indent=4))
