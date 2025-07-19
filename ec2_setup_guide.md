@@ -1,27 +1,28 @@
-# 🚀 Guía de Despliegue en EC2 - Social Content Automation
+# 🚀 Guía de Despliegue en EC2 Amazon Linux - Social Content Automation
 
-Esta guía te ayudará a desplegar tu proyecto de automatización de contenido social en un servidor EC2 de AWS y configurarlo para ejecutarse automáticamente con cron.
+Esta guía te ayudará a desplegar tu proyecto de automatización de contenido social en un servidor EC2 con Amazon Linux y configurarlo para ejecutarse automáticamente con cron.
 
 ## 📋 Prerrequisitos
 
-- Una instancia EC2 de Ubuntu (recomendado: t3.medium o superior)
+- Una instancia EC2 con Amazon Linux (recomendado: t3.medium o superior)
 - Acceso SSH a tu instancia EC2
 - Tu archivo `.pem` de AWS configurado
 - Todas las credenciales de API necesarias
 
-## 🔧 Paso 1: Preparar tu instancia EC2
+## 🔧 Paso 1: Preparar tu instancia EC2 Amazon Linux
 
 ### 1.1 Conectar a tu instancia EC2
 
 ```bash
 # Reemplaza con tu IP pública y archivo .pem
-ssh -i "tu-archivo.pem" ubuntu@tu-ip-publica-ec2
+ssh -i "tu-archivo.pem" ec2-user@tu-ip-publica-ec2
 ```
 
 ### 1.2 Actualizar el sistema
 
 ```bash
-sudo apt-get update && sudo apt-get upgrade -y
+# En Amazon Linux usamos yum en lugar de apt-get
+sudo yum update -y
 ```
 
 ## 📦 Paso 2: Transferir tu código
@@ -30,14 +31,14 @@ sudo apt-get update && sudo apt-get upgrade -y
 
 ```bash
 # Desde tu máquina local, en el directorio del proyecto
-scp -i "tu-archivo.pem" -r . ubuntu@tu-ip-publica-ec2:/home/ubuntu/social-content-automation/
+scp -i "tu-archivo.pem" -r . ec2-user@tu-ip-publica-ec2:/home/ec2-user/social-content-automation/
 ```
 
 ### Opción B: Usando Git (si tienes un repositorio)
 
 ```bash
 # En tu instancia EC2
-cd /home/ubuntu
+cd /home/ec2-user
 git clone https://github.com/tu-usuario/social-content-automation.git
 ```
 
@@ -46,22 +47,22 @@ git clone https://github.com/tu-usuario/social-content-automation.git
 ### 3.1 Dar permisos de ejecución
 
 ```bash
-cd /home/ubuntu/social-content-automation
-chmod +x deploy_ec2.sh
+cd /home/ec2-user/social-content-automation
+chmod +x deploy_ec2_amazon_linux.sh
 ```
 
 ### 3.2 Ejecutar el script de despliegue
 
 ```bash
-./deploy_ec2.sh
+./deploy_ec2_amazon_linux.sh
 ```
 
 Este script automáticamente:
-- Instala todas las dependencias del sistema
+- Instala todas las dependencias del sistema usando `yum`
 - Configura Python y pipenv
 - Instala las dependencias del proyecto
 - Crea el archivo `.env` con plantillas
-- Configura cron jobs
+- Configura cronie (el servicio cron de Amazon Linux)
 - Configura supervisor para monitoreo
 
 ## ⚙️ Paso 4: Configurar credenciales
@@ -95,7 +96,7 @@ CLOUDINARY_API_SECRET=tu-api-secret
 ### 5.1 Probar la conexión de Telegram
 
 ```bash
-cd /home/ubuntu/social-content-automation
+cd /home/ec2-user/social-content-automation
 pipenv run python run_me_telegram_content.py --test-connection
 ```
 
@@ -116,7 +117,7 @@ pipenv run python run_me_telegram_content.py --dry-run
 ### 6.1 Instalar el cron job
 
 ```bash
-(crontab -l 2>/dev/null; cat crontab_ec2.txt) | crontab -
+(crontab -l 2>/dev/null; cat crontab_amazon_linux.txt) | crontab -
 ```
 
 ### 6.2 Verificar que se instaló correctamente
@@ -125,7 +126,13 @@ pipenv run python run_me_telegram_content.py --dry-run
 crontab -l
 ```
 
-### 6.3 Editar manualmente si es necesario
+### 6.3 Verificar que el servicio cronie está ejecutándose
+
+```bash
+sudo systemctl status crond
+```
+
+### 6.4 Editar manualmente si es necesario
 
 ```bash
 crontab -e
@@ -151,9 +158,15 @@ tail -f /var/log/social-content-automation/supervisor_*.log
 sudo supervisorctl status
 ```
 
-## 🔧 Comandos útiles
+### 7.4 Ejecutar script de monitoreo completo
 
-### Gestión de cron
+```bash
+./monitoring_script_amazon_linux.sh
+```
+
+## 🔧 Comandos útiles específicos para Amazon Linux
+
+### Gestión de cronie
 ```bash
 # Ver jobs activos
 crontab -l
@@ -163,6 +176,12 @@ crontab -e
 
 # Eliminar todos los jobs
 crontab -r
+
+# Verificar estado del servicio
+sudo systemctl status crond
+
+# Reiniciar servicio
+sudo systemctl restart crond
 ```
 
 ### Gestión de supervisor
@@ -185,11 +204,11 @@ tail -f /var/log/social-content-automation/telegram_content.log
 # Ver logs de errores
 tail -f /var/log/social-content-automation/supervisor_err.log
 
-# Limpiar logs antiguos
-sudo logrotate -f /etc/logrotate.conf
+# Ver logs del sistema
+sudo tail -f /var/log/messages
 ```
 
-## 🚨 Solución de problemas
+## 🚨 Solución de problemas específicos para Amazon Linux
 
 ### Problema: El script no se ejecuta
 ```bash
@@ -207,24 +226,40 @@ echo $PATH
 ### Problema: Errores de dependencias
 ```bash
 # Reinstalar dependencias
-cd /home/ubuntu/social-content-automation
+cd /home/ec2-user/social-content-automation
 pipenv install --deploy
 ```
 
 ### Problema: Errores de permisos
 ```bash
 # Corregir permisos
-sudo chown -R ubuntu:ubuntu /home/ubuntu/social-content-automation
+sudo chown -R ec2-user:ec2-user /home/ec2-user/social-content-automation
 chmod +x run_telegram_content.sh
 ```
 
-### Problema: Cron no ejecuta
+### Problema: Cronie no ejecuta
 ```bash
-# Verificar que cron está corriendo
-sudo systemctl status cron
+# Verificar que cronie está corriendo
+sudo systemctl status crond
 
-# Verificar logs de cron
-sudo tail -f /var/log/syslog | grep CRON
+# Verificar logs de cronie
+sudo tail -f /var/log/cron
+
+# Verificar logs del sistema
+sudo tail -f /var/log/messages | grep CRON
+```
+
+### Problema: Supervisor no funciona
+```bash
+# Verificar estado
+sudo systemctl status supervisord
+
+# Reiniciar supervisor
+sudo systemctl restart supervisord
+
+# Verificar configuración
+sudo supervisorctl reread
+sudo supervisorctl update
 ```
 
 ## 📅 Programación de cron
@@ -233,61 +268,77 @@ sudo tail -f /var/log/syslog | grep CRON
 
 ```bash
 # Todos los días a las 9:00 AM
-0 9 * * * /home/ubuntu/social-content-automation/run_telegram_content.sh
+0 9 * * * /home/ec2-user/social-content-automation/run_telegram_content.sh
 
 # Lunes, miércoles y viernes a las 10:00 AM
-0 10 * * 1,3,5 /home/ubuntu/social-content-automation/run_telegram_content.sh
+0 10 * * 1,3,5 /home/ec2-user/social-content-automation/run_telegram_content.sh
 
 # Cada 6 horas
-0 */6 * * * /home/ubuntu/social-content-automation/run_telegram_content.sh
+0 */6 * * * /home/ec2-user/social-content-automation/run_telegram_content.sh
 
 # Solo en días laborables a las 8:00 AM
-0 8 * * 1-5 /home/ubuntu/social-content-automation/run_telegram_content.sh
+0 8 * * 1-5 /home/ec2-user/social-content-automation/run_telegram_content.sh
 ```
 
 ## 🔒 Seguridad
 
-### Configurar firewall
+### Configurar firewall (Amazon Linux usa iptables)
 ```bash
 # Permitir solo SSH
-sudo ufw allow ssh
-sudo ufw enable
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -j DROP
+sudo service iptables save
 ```
 
 ### Actualizar regularmente
 ```bash
 # Crear script de actualización
 sudo crontab -e
-# Agregar: 0 2 * * 0 sudo apt-get update && sudo apt-get upgrade -y
+# Agregar: 0 2 * * 0 sudo yum update -y
 ```
 
 ## 📈 Monitoreo avanzado
 
 ### Instalar herramientas de monitoreo
 ```bash
-sudo apt-get install -y htop iotop nethogs
+sudo yum install -y htop iotop nethogs
 ```
 
-### Configurar alertas por email (opcional)
+### Configurar CloudWatch (recomendado para AWS)
 ```bash
-sudo apt-get install -y mailutils
-# Configurar postfix para enviar emails de alerta
+# Instalar CloudWatch agent
+sudo yum install -y amazon-cloudwatch-agent
+
+# Configurar métricas personalizadas
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
 ```
+
+## 🔄 Diferencias clave con Ubuntu
+
+| Aspecto | Ubuntu | Amazon Linux |
+|---------|--------|--------------|
+| Gestor de paquetes | `apt-get` | `yum` |
+| Usuario por defecto | `ubuntu` | `ec2-user` |
+| Servicio cron | `cron` | `cronie` |
+| Firewall | `ufw` | `iptables` |
+| Directorio home | `/home/ubuntu` | `/home/ec2-user` |
+| Supervisor config | `/etc/supervisor/conf.d/` | `/etc/supervisord.d/` |
 
 ---
 
-## ✅ Checklist de verificación
+## ✅ Checklist de verificación para Amazon Linux
 
-- [ ] Instancia EC2 configurada y accesible
+- [ ] Instancia EC2 con Amazon Linux configurada y accesible
 - [ ] Código transferido al servidor
 - [ ] Script de despliegue ejecutado exitosamente
 - [ ] Archivo .env configurado con credenciales reales
 - [ ] Prueba de conexión exitosa
 - [ ] Prueba dry-run exitosa
-- [ ] Cron job configurado y funcionando
+- [ ] Cronie configurado y funcionando
 - [ ] Logs configurados y accesibles
 - [ ] Supervisor configurado (opcional)
 - [ ] Firewall configurado
 - [ ] Sistema de respaldo configurado (recomendado)
+- [ ] CloudWatch configurado (recomendado para AWS)
 
-¡Tu automatización de contenido social está lista para ejecutarse en EC2! 🎉 
+¡Tu automatización de contenido social está lista para ejecutarse en Amazon Linux! 🎉 

@@ -1,52 +1,55 @@
 #!/bin/bash
-# Script de despliegue para EC2 - Social Content Automation
-# Ejecutar como: bash deploy_ec2.sh
+# Script de despliegue para EC2 Amazon Linux - Social Content Automation
+# Ejecutar como: bash deploy_ec2_amazon_linux.sh
 
 set -e  # Salir si hay algún error
 
-echo "🚀 Iniciando despliegue en EC2..."
+echo "🚀 Iniciando despliegue en EC2 Amazon Linux..."
 
 # Variables
 PROJECT_NAME="social-content-automation"
-PROJECT_DIR="/home/ubuntu/$PROJECT_NAME"
+PROJECT_DIR="/home/ec2-user/$PROJECT_NAME"
 LOG_DIR="/var/log/$PROJECT_NAME"
 
 # Actualizar sistema
 echo "📦 Actualizando sistema..."
-sudo apt-get update
-sudo apt-get upgrade -y
+sudo yum update -y
 
 # Instalar dependencias del sistema
 echo "🔧 Instalando dependencias del sistema..."
-sudo apt-get install -y \
+sudo yum install -y \
     python3 \
     python3-pip \
-    python3-venv \
     git \
     curl \
     wget \
     unzip \
-    build-essential \
-    python3-dev \
-    libffi-dev \
-    libssl-dev \
-    cron \
+    gcc \
+    python3-devel \
+    openssl-devel \
+    libffi-devel \
+    cronie \
     supervisor
+
+# Habilitar y iniciar cronie
+echo "⏰ Configurando cronie..."
+sudo systemctl enable crond
+sudo systemctl start crond
 
 # Crear directorio del proyecto
 echo "📁 Creando directorio del proyecto..."
 sudo mkdir -p $PROJECT_DIR
-sudo chown ubuntu:ubuntu $PROJECT_DIR
+sudo chown ec2-user:ec2-user $PROJECT_DIR
 
 # Crear directorio de logs
 echo "📝 Creando directorio de logs..."
 sudo mkdir -p $LOG_DIR
-sudo chown ubuntu:ubuntu $LOG_DIR
+sudo chown ec2-user:ec2-user $LOG_DIR
 
 # Clonar repositorio (asumiendo que ya tienes el código)
 echo "📥 Copiando código del proyecto..."
 # Si tienes el código local, puedes usar scp o rsync
-# scp -r . ubuntu@your-ec2-ip:$PROJECT_DIR/
+# scp -r . ec2-user@your-ec2-ip:$PROJECT_DIR/
 
 # Instalar pipenv globalmente
 echo "🐍 Instalando pipenv..."
@@ -128,16 +131,16 @@ chmod +x run_telegram_content.sh
 echo "⏰ Configurando cron job..."
 CRON_JOB="0 9 * * * $PROJECT_DIR/run_telegram_content.sh"
 
-# Agregar al crontab del usuario ubuntu
+# Agregar al crontab del usuario ec2-user
 (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
 
 # Crear configuración de supervisor (opcional, para monitoreo)
 echo "👀 Configurando supervisor..."
-sudo tee /etc/supervisor/conf.d/social-content.conf > /dev/null << EOF
+sudo tee /etc/supervisord.d/social-content.ini > /dev/null << EOF
 [program:social-content-automation]
 command=$PROJECT_DIR/run_telegram_content.sh
 directory=$PROJECT_DIR
-user=ubuntu
+user=ec2-user
 autostart=true
 autorestart=true
 stderr_logfile=$LOG_DIR/supervisor_err.log
@@ -145,6 +148,8 @@ stdout_logfile=$LOG_DIR/supervisor_out.log
 EOF
 
 # Reiniciar supervisor
+sudo systemctl enable supervisord
+sudo systemctl start supervisord
 sudo supervisorctl reread
 sudo supervisorctl update
 
@@ -161,4 +166,5 @@ echo "🔧 Comandos útiles:"
 echo "- Ver logs: tail -f $LOG_DIR/telegram_content.log"
 echo "- Ver cron jobs: crontab -l"
 echo "- Editar cron: crontab -e"
-echo "- Reiniciar supervisor: sudo supervisorctl restart social-content-automation" 
+echo "- Reiniciar supervisor: sudo supervisorctl restart social-content-automation"
+echo "- Estado del sistema: sudo systemctl status crond" 

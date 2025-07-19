@@ -1,6 +1,6 @@
 #!/bin/bash
-# Script de monitoreo para Social Content Automation en EC2
-# Ejecutar: ./monitoring_script.sh
+# Script de monitoreo para Social Content Automation en Amazon Linux
+# Ejecutar: ./monitoring_script_amazon_linux.sh
 
 set -e
 
@@ -12,11 +12,11 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Variables
-PROJECT_DIR="/home/ubuntu/social-content-automation"
+PROJECT_DIR="/home/ec2-user/social-content-automation"
 LOG_DIR="/var/log/social-content-automation"
 LOG_FILE="$LOG_DIR/telegram_content.log"
 
-echo -e "${BLUE}🔍 Monitoreo del Sistema - Social Content Automation${NC}"
+echo -e "${BLUE}🔍 Monitoreo del Sistema - Social Content Automation (Amazon Linux)${NC}"
 echo "=================================================="
 echo ""
 
@@ -90,7 +90,7 @@ else
     print_status "ERROR" "Pipfile.lock no encontrado"
 fi
 
-# 5. Verificar cron jobs
+# 5. Verificar cron jobs (cronie en Amazon Linux)
 echo ""
 echo -e "${BLUE}⏰ Verificando cron jobs...${NC}"
 if command -v crontab &> /dev/null; then
@@ -106,7 +106,17 @@ else
     print_status "ERROR" "Cron no disponible"
 fi
 
-# 6. Verificar supervisor
+# 6. Verificar estado del servicio cronie
+echo ""
+echo -e "${BLUE}🔄 Verificando servicio cronie...${NC}"
+if sudo systemctl is-active --quiet crond; then
+    print_status "OK" "Servicio cronie ejecutándose"
+else
+    print_status "WARNING" "Servicio cronie no ejecutándose"
+    echo "  Para iniciar: sudo systemctl start crond"
+fi
+
+# 7. Verificar supervisor
 echo ""
 echo -e "${BLUE}👀 Verificando supervisor...${NC}"
 if command -v supervisorctl &> /dev/null; then
@@ -127,7 +137,7 @@ else
     print_status "WARNING" "Supervisor no instalado"
 fi
 
-# 7. Verificar logs
+# 8. Verificar logs
 echo ""
 echo -e "${BLUE}📝 Verificando logs...${NC}"
 if [ -d "$LOG_DIR" ]; then
@@ -151,7 +161,7 @@ else
     print_status "ERROR" "Directorio de logs no existe: $LOG_DIR"
 fi
 
-# 8. Verificar espacio en disco
+# 9. Verificar espacio en disco
 echo ""
 echo -e "${BLUE}💾 Verificando espacio en disco...${NC}"
 DISK_USAGE=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
@@ -161,7 +171,7 @@ else
     print_status "WARNING" "Espacio en disco alto: ${DISK_USAGE}% usado"
 fi
 
-# 9. Verificar memoria
+# 10. Verificar memoria
 echo ""
 echo -e "${BLUE}🧠 Verificando memoria...${NC}"
 MEMORY_USAGE=$(free | awk 'NR==2{printf "%.1f", $3*100/$2}')
@@ -171,7 +181,7 @@ else
     print_status "WARNING" "Uso de memoria alto: ${MEMORY_USAGE}%"
 fi
 
-# 10. Verificar conectividad de red
+# 11. Verificar conectividad de red
 echo ""
 echo -e "${BLUE}🌐 Verificando conectividad...${NC}"
 if ping -c 1 8.8.8.8 &> /dev/null; then
@@ -180,7 +190,7 @@ else
     print_status "ERROR" "Sin conectividad a internet"
 fi
 
-# 11. Prueba rápida del script
+# 12. Prueba rápida del script
 echo ""
 echo -e "${BLUE}🧪 Prueba rápida del script...${NC}"
 if [ -f "$PROJECT_DIR/run_telegram_content.sh" ]; then
@@ -196,6 +206,16 @@ else
     print_status "ERROR" "Script de ejecución no encontrado"
 fi
 
+# 13. Verificar versión de Amazon Linux
+echo ""
+echo -e "${BLUE}🐧 Verificando sistema operativo...${NC}"
+if [ -f /etc/os-release ]; then
+    OS_VERSION=$(grep "PRETTY_NAME" /etc/os-release | cut -d'"' -f2)
+    print_status "OK" "Sistema: $OS_VERSION"
+else
+    print_status "WARNING" "No se pudo determinar la versión del sistema"
+fi
+
 echo ""
 echo -e "${BLUE}==================================================${NC}"
 echo -e "${BLUE}📊 Resumen del monitoreo completado${NC}"
@@ -205,6 +225,7 @@ echo -e "${YELLOW}💡 Comandos útiles:${NC}"
 echo "  - Ver logs en tiempo real: tail -f $LOG_FILE"
 echo "  - Ver cron jobs: crontab -l"
 echo "  - Editar cron: crontab -e"
+echo "  - Estado cronie: sudo systemctl status crond"
 echo "  - Estado supervisor: sudo supervisorctl status"
 echo "  - Reiniciar servicio: sudo supervisorctl restart social-content-automation"
 echo "  - Probar conexión: cd $PROJECT_DIR && pipenv run python run_me_telegram_content.py --test-connection"
