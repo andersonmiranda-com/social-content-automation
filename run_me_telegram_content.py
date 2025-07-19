@@ -13,7 +13,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from pipelines.rag_content_pipeline import rag_content_pipeline
+from pipelines.me_telegram_content_pipeline import me_telegram_content_pipeline
 from tools.telegram_tool import test_telegram_connection_chain
 from utils.logger import setup_logger
 
@@ -57,7 +57,7 @@ def generate_and_publish(
     try:
         # Run the pipeline
         with console.status("[green]Generating content and publishing to Telegram..."):
-            result = rag_content_pipeline.invoke({})
+            result = me_telegram_content_pipeline.invoke({})
 
         # Display results
         display_results(result)

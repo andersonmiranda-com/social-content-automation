@@ -13,7 +13,7 @@ from langchain_core.runnables import RunnablePassthrough
 
 from chains.apply_overlay_chain import apply_overlay_chain
 from chains.generate_dalle_image import generate_dalle_image_chain
-from chains.rag_content_chain import rag_content_chain
+from chains.me_telegram_content_chain import me_telegram_content_chain
 from chains.select_topic_rag_chain import select_topic_rag_chain
 from chains.telegram_publish_chain import (
     format_telegram_content_chain,
@@ -68,12 +68,12 @@ def validate_pipeline_result(result: dict) -> dict:
 
 
 # Create the complete pipeline
-rag_content_pipeline = (
+me_telegram_content_pipeline = (
     # Step 1: Select random topic
     RunnablePassthrough.assign(topic_selection=select_topic_rag_chain)
     # Step 2: Generate content using RAG
     | RunnablePassthrough.assign(
-        content_generation=lambda x: rag_content_chain.invoke(
+        content_generation=lambda x: me_telegram_content_chain.invoke(
             {"selected_topic": x["topic_selection"]["selected_topic"]}
         )
     )

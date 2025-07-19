@@ -1,5 +1,5 @@
 """
-RAG Content Generation Chain
+MindEssence Telegram Content Generation Chain
 
 This chain generates content using RAG (Retrieval-Augmented Generation) based on a selected topic.
 """
@@ -17,7 +17,7 @@ from utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 
-def generate_rag_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
+def generate_me_telegram_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Generate content using RAG based on the selected topic.
 
@@ -110,4 +110,4 @@ def generate_rag_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # Create the chain
-rag_content_chain = RunnableLambda(generate_rag_content_logic)
+me_telegram_content_chain = RunnableLambda(generate_me_telegram_content_logic)
