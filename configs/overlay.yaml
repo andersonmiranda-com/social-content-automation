@@ -1,0 +1,24 @@
+# Overlay Configuration
+# Settings for applying image overlays to generated content
+
+# Overlay image URL (legacy)
+overlay_url: "https://res.cloudinary.com/dlvxgjflw/image/upload/v1752137211/social/overlay_posts_egzcw3.png"
+
+# New overlay image (Icon_Blanco)
+overlay_image: "social:icon-white-ring_ulnywt"
+
+# Overlay positioning
+position: "top_left"  # Options: top_left, top_right, bottom_left, bottom_right, center
+
+# Overlay opacity (0.0 to 1.0)
+opacity: 0.6
+
+# Overlay size (percentage of original image)
+size_percentage: 12
+
+# Overlay offset (percentage of image dimensions)
+offset_x: 0.03
+offset_y: 0.04
+
+# Enable/disable overlay
+enabled: true 

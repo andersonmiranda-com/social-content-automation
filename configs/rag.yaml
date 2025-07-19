@@ -6,6 +6,13 @@ pdf_directory: "data/pdfs"
 chunk_size: 1000
 chunk_overlap: 200
 
+# Topics Settings
+topics_file: "data/topics/topics.txt"
+
+# Content Generation Settings
+content_model: "gpt-4o-mini"
+content_temperature: 0.4
+
 # Vector Database Settings
 vector_db_path: "data/vector_db"
 collection_name: "pdf_documents"

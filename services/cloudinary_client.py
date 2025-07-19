@@ -1,6 +1,8 @@
+from typing import Any, Dict, Optional
+
 import cloudinary
 import cloudinary.uploader
-from typing import Dict, Any, Optional
+
 from utils.config_loader import load_config
 from utils.env_loader import load_environment
 from utils.logger import setup_logger
@@ -58,6 +60,48 @@ class CloudinaryClient:
             return result
         except Exception as e:
             logger.error(f"Error uploading to Cloudinary: {e}")
+            raise
+
+    def upload_with_transformations(
+        self, image_url: str, upload_options: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Uploads an image to Cloudinary with transformations applied during upload.
+
+        Args:
+            image_url: The URL of the image to upload.
+            upload_options: Dictionary containing upload options including transformations.
+
+        Returns:
+            A dictionary containing the response from Cloudinary.
+        """
+        try:
+            # Use the provided folder or fall back to the default from config
+            upload_folder = upload_options.get("folder") or self.config.get("folder")
+
+            # Prepare upload options
+            options = {
+                "upload_preset": self.config.get("upload_preset"),
+                "folder": upload_folder,
+            }
+
+            # Add transformations if provided
+            if "transformation" in upload_options:
+                options["transformation"] = upload_options["transformation"]
+
+            # Filter out None values
+            options = {k: v for k, v in options.items() if v is not None}
+
+            logger.info(
+                f"Uploading to Cloudinary folder: '{upload_folder}' with transformations"
+            )
+            result = cloudinary.uploader.upload(
+                image_url,
+                **options,
+            )
+            return result
+        except Exception as e:
+            logger.error(f"Error uploading to Cloudinary with transformations: {e}")
             raise
 
 

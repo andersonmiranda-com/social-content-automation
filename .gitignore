@@ -52,6 +52,7 @@ docs/_build/
 .mypy_cache/
 .pytype/
 .pyre/
+.DS_Store
 
 # Local configuration files
 /configs/local.yaml
