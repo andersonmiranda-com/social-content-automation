@@ -3,15 +3,20 @@ Configuration loader for YAML files.
 """
 
 import os
-from pathlib import Path
 import re
+from pathlib import Path
+
 import yaml
+from dotenv import load_dotenv
 
 from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
 CONFIG_CACHE = {}
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def _replace_env_vars(config: dict) -> dict:

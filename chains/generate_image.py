@@ -18,12 +18,23 @@ def generate_image_logic(post_data: dict) -> dict:
     Generates an image based on post content using an LLM.
 
     Args:
-        post_data: A dictionary containing the post content under the 'content' key.
+        post_data: A dictionary containing:
+            - content: The post content to generate image for
+            - model: Optional model override (e.g., "dall-e-3")
+            - quality: Optional quality setting for DALL-E 3
+            - style: Optional style setting for DALL-E 3
 
     Returns:
         A dictionary containing the URL of the generated image.
     """
+    # Load default config but allow overrides from post_data
     config = load_config("generate_image")
+
+    # Override config with any parameters passed in post_data
+    model = post_data.get("model", config["model"])
+    quality = post_data.get("quality", config.get("quality", "standard"))
+    style = post_data.get("style", config.get("style", "vivid"))
+
     prompt_template_str = load_prompt_template("prompts/image_prompt.txt")
     prompt_template = PromptTemplate.from_template(prompt_template_str)
 
@@ -31,18 +42,18 @@ def generate_image_logic(post_data: dict) -> dict:
 
     formatted_prompt = prompt_template.format(content=post_data.get("content", ""))
 
-    logger.info("--- 🎨 Generating image with prompt ---")
+    logger.info(f"--- 🎨 Generating image with {model} ---")
     logger.debug(f"Formatted prompt: {formatted_prompt}")
 
     image_generation_params = {
         "prompt": formatted_prompt,
-        "model": config["model"],
+        "model": model,
     }
 
     # Add parameters only supported by DALL-E 3
-    if config["model"] == "dall-e-3":
-        image_generation_params["quality"] = config.get("quality", "standard")
-        image_generation_params["style"] = config.get("style", "vivid")
+    if model == "dall-e-3":
+        image_generation_params["quality"] = quality
+        image_generation_params["style"] = style
 
     if "response_format" in config:
         image_generation_params["response_format"] = config["response_format"]

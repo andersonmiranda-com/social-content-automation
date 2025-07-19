@@ -1,0 +1,21 @@
+# Telegram Configuration
+# Settings for Telegram Bot API
+
+# Bot Configuration
+bot_token: "${TELEGRAM_BOT_TOKEN}"
+chat_id: "${TELEGRAM_CHAT_ID}"
+
+# Message Settings
+default_parse_mode: "HTML"
+max_message_length: 4096
+max_caption_length: 1024
+
+# Media Settings
+supported_photo_formats: ["jpg", "jpeg", "png", "gif"]
+max_photo_size_mb: 10
+max_media_group_size: 10
+
+# Posting Settings
+enable_hashtags: false
+default_hashtags: ["#desarrollopersonal", "#coaching", "#constelaciones"]
+auto_add_hashtags: false 

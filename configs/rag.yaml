@@ -1,0 +1,26 @@
+# RAG Configuration
+# Settings for PDF processing and vector database
+
+# PDF Processing Settings
+pdf_directory: "data/pdfs"
+chunk_size: 1000
+chunk_overlap: 200
+
+# Topics Settings
+topics_file: "data/topics/topics.txt"
+
+# Content Generation Settings
+content_model: "gpt-4o-mini"
+content_temperature: 0.4
+
+# Vector Database Settings
+vector_db_path: "data/vector_db"
+collection_name: "pdf_documents"
+embedding_model: "text-embedding-3-small"
+
+# Search Settings
+default_search_k: 4
+max_search_k: 10
+
+# Batch Processing Settings
+batch_size: 1000 
