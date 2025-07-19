@@ -65,4 +65,6 @@ docs/_build/
 token.json
 *token.json
 
+# Data files
 /data/vector_db
+/data/pdfs/
