@@ -63,3 +63,5 @@ docs/_build/
 # Tokens
 token.json
 *token.json
+
+/data/vector_db
