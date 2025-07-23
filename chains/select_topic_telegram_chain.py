@@ -65,4 +65,4 @@ def select_topic_logic(input_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # Create the chain
-select_topic_rag_chain = RunnableLambda(select_topic_logic)
+select_topic_telegram_chain = RunnableLambda(select_topic_logic)

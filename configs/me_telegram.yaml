@@ -1,0 +1,7 @@
+# me_telegram
+# Topics Settings
+topics_file: "data/topics/topics.txt"
+
+# Content Generation Settings
+content_model: "gpt-4o-mini"
+content_temperature: 0.4

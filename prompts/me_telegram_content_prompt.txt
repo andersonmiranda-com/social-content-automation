@@ -4,9 +4,6 @@ Crie um texto de 1 parágrafo curto (max 60 palavras) sobre o tema:
 
 {question}, 
 
-usando as seguintes informações da base de conhecimento:
-{context}
-
 Gera un texto de maneira fluida. Use tom informal, motivador, com palavras simples, usadas no dia a dia, como falando a um amigo. 
 Não citar fontes, ou nomes de documentos de la base de conhecimento.
 

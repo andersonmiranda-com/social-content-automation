@@ -10,7 +10,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 from langchain_openai import ChatOpenAI
 
-from services.vector_store import vector_store_service
 from utils.config_loader import load_config
 from utils.logger import setup_logger
 
@@ -37,18 +36,7 @@ def generate_me_telegram_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
         logger.info(f"Topic: {selected_topic}")
 
         # Load configuration
-        config = load_config("rag")
-        search_k = config.get("default_search_k", 4)
-
-        # Search for relevant documents in vector store
-        relevant_docs = vector_store_service.similarity_search(
-            query=selected_topic, k=search_k
-        )
-
-        # Prepare context from relevant documents
-        context = "\n\n".join([doc.page_content for doc in relevant_docs])
-
-        logger.info(f"Found {len(relevant_docs)} relevant documents")
+        config = load_config("me_telegram")
 
         # Generate content using LLM
         llm = ChatOpenAI(
@@ -59,12 +47,14 @@ def generate_me_telegram_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
         # Load prompt template from file
         from utils.file_utils import load_prompt_template
 
-        prompt_template_str = load_prompt_template("prompts/rag_content_prompt.txt")
+        prompt_template_str = load_prompt_template(
+            "prompts/me_telegram_content_prompt.txt"
+        )
         prompt_template = ChatPromptTemplate.from_template(prompt_template_str)
 
         # Generate content
         chain = prompt_template | llm
-        result = chain.invoke({"question": selected_topic, "context": context})
+        result = chain.invoke({"question": selected_topic})
 
         # Parse JSON response
         import json
@@ -96,7 +86,6 @@ def generate_me_telegram_content_logic(data: Dict[str, Any]) -> Dict[str, Any]:
             "generated_content": generated_content,
             "quote": quote,
             "topic": selected_topic,
-            "context_documents_count": len(relevant_docs),
             "model_used": config.get("content_model", "gpt-4o-mini"),
         }
 
